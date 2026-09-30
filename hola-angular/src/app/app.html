@@ -1,0 +1,21 @@
+<main	class="contenedor">
+		<p	class="etiqueta">ISC-305	·	Programación	Web</p>
+		<h1>¡Hola,	{{	nombre()	}}!</h1>
+		<p	class="descripcion">Mi	primera	aplicación	creada	con	Angular	CLI.</p>
+		<section	class="tarjeta">
+				<h2>Interacción	básica</h2>
+				<p>Has	presionado	el	botón	{{	contador()	}}	veces.</p>
+				<div	class="acciones">
+						<button	type="button"	(click)="incrementar()">
+								Presionar
+						</button>
+						<button
+								type="button"
+								class="secundario"
+								(click)="reiniciar()"
+								[disabled]="contador()	===	0">
+								Reiniciar
+						</button>
+				</div>
+		</section>
+</main>
