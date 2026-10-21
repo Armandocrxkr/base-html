@@ -1,0 +1,9 @@
+main { max-width: 900px; margin: 24px auto; padding: 16px; }
+form { max-width: 400px; margin-bottom: 24px; }
+label { display: block; margin-top: 12px; }
+input { width: 100%; padding: 8px; box-sizing: border-box; }
+button { margin: 8px 6px 0 0; padding: 8px 12px; }
+.tabla { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+th { background: #eaf2fa; }
