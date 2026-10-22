@@ -1,0 +1,33 @@
+<main>
+  <h1>Registro de personas</h1>
+
+  <button type="button" (click)="cerrarSesion()">
+    Cerrar sesión
+  </button>
+
+  <h2>Personas registradas</h2>
+  <p>Total: {{ personas.length }}</p>
+
+  <div class="tabla">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>DNI</th>
+          <th>Nombre</th>
+          <th>Fecha de nacimiento</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (persona of personas; track persona.id) {
+          <tr>
+            <td>{{ persona.id }}</td>
+            <td>{{ persona.dni }}</td>
+            <td>{{ persona.nombre }}</td>
+            <td>{{ persona.fechaNacimiento }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</main>
