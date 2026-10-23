@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
+import { FormsModule } from '@angular/forms';
 import { PersonaComponent } from './persona/persona.component';
 
 export const routes: Routes = [

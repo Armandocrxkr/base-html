@@ -5,6 +5,24 @@
     Cerrar sesión
   </button>
 
+  <h2>Registrar persona</h2>
+  <form (ngSubmit)="guardar()">
+    <label for="dni">DNI</label>
+    <input id="dni" name="dni" type="text"
+           [(ngModel)]="dni" required>
+
+    <label for="nombre">Nombre</label>
+    <input id="nombre" name="nombre"
+           [(ngModel)]="nombre" required>
+
+    <label for="fecha">Fecha de nacimiento</label>
+    <input id="fecha" name="fecha" type="date"
+           [(ngModel)]="fechaNacimiento" required>
+
+    <button type="submit">Guardar</button>
+    <button type="button" (click)="limpiar()">Limpiar</button>
+  </form>
+
   <h2>Personas registradas</h2>
   <p>Total: {{ personas.length }}</p>
 
