@@ -47,6 +47,14 @@ export class PersonaComponent {
     this.fechaNacimiento = this.personas[indice].fechaNacimiento;
   }
 
+  eliminar(indice: number) {
+    if (confirm('¿Eliminar esta persona?')) {
+      this.personas.splice(indice, 1);
+      this.guardarEnLocalStorage();
+      this.limpiar();
+    }
+  }
+
   guardar() {
     if (this.dni.trim() === '' || this.nombre.trim() === '' ||
         this.fechaNacimiento === '') {
