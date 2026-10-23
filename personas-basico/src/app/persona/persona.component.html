@@ -5,7 +5,11 @@
     Cerrar sesión
   </button>
 
-  <h2>Registrar persona</h2>
+  @if (indiceEditar === -1) {
+    <h2>Registrar persona</h2>
+  } @else {
+    <h2>Editar persona</h2>
+  }
   <form (ngSubmit)="guardar()">
     <label for="dni">DNI</label>
     <input id="dni" name="dni" type="text"
@@ -19,8 +23,12 @@
     <input id="fecha" name="fecha" type="date"
            [(ngModel)]="fechaNacimiento" required>
 
-    <button type="submit">Guardar</button>
-    <button type="button" (click)="limpiar()">Limpiar</button>
+    @if (indiceEditar === -1) {
+      <button type="submit">Guardar</button>
+    } @else {
+      <button type="submit">Actualizar</button>
+    }
+    <button type="button" (click)="limpiar()">Cancelar</button>
   </form>
 
   <h2>Personas registradas</h2>
@@ -34,15 +42,21 @@
           <th>DNI</th>
           <th>Nombre</th>
           <th>Fecha de nacimiento</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        @for (persona of personas; track persona.id) {
+        @for (persona of personas; track persona.id; let i = $index) {
           <tr>
             <td>{{ persona.id }}</td>
             <td>{{ persona.dni }}</td>
             <td>{{ persona.nombre }}</td>
             <td>{{ persona.fechaNacimiento }}</td>
+            <td>
+              <button type="button" (click)="editar(i)">
+                Editar
+              </button>
+            </td>
           </tr>
         }
       </tbody>
