@@ -110,4 +110,11 @@ export class MascotaComponent {
     this.limpiar();
     this.mensaje = '';
   }
+
+    eliminar(id: number) {
+    if (!confirm('¿Seguro que desea eliminar esta mascota?')) return;
+    this.mascotas = this.mascotas.filter(m => m.id !== id);
+    this.guardarEnStorage();
+    if (this.editandoId === id) this.cancelar();
+  }
 }
