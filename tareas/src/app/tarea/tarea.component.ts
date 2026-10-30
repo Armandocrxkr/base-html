@@ -114,4 +114,11 @@ export class TareaComponent {
     this.limpiar();
     this.mensaje = '';
   }
+
+    eliminar(id: number) {
+    if (!confirm('¿Seguro que desea eliminar esta tarea?')) return;
+    this.tareas = this.tareas.filter(t => t.id !== id);
+    this.guardarEnStorage();
+    if (this.editandoId === id) this.cancelar();
+  }
 }
