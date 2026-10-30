@@ -1,1 +1,23 @@
-<p>libro works!</p>
+<h2>Catálogo de productos</h2>
+<button (click)="cerrarSesion()">Cerrar sesión</button>
+<p>Total de productos: {{ productos.length }}</p>
+
+@if (productos.length === 0) {
+  <p>No hay productos registrados.</p>
+} @else {
+  <table border="1">
+    <tr>
+      <th>ID</th><th>Código</th><th>Nombre</th><th>Precio</th><th>Existencias</th><th>Acciones</th>
+    </tr>
+    @for (p of productos; track p.id) {
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.codigo }}</td>
+        <td>{{ p.nombre }}</td>
+        <td>L {{ p.precio.toFixed(2) }}</td>
+        <td>{{ p.existencias }}</td>
+        <td><!-- acciones --></td>
+      </tr>
+    }
+  </table>
+}
