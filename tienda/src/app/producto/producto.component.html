@@ -1,5 +1,14 @@
 <h2>Catálogo de productos</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
+<div>
+  <h3>Datos del producto</h3>
+  <label>Código</label> <input type="text" [(ngModel)]="codigo"><br>
+  <label>Nombre</label> <input type="text" [(ngModel)]="nombre"><br>
+  <label>Precio (L)</label> <input type="number" step="0.01" [(ngModel)]="precio"><br>
+  <label>Existencias</label> <input type="number" [(ngModel)]="existencias"><br>
+  <button (click)="crear()">Guardar</button>
+  <p>{{ mensaje }}</p>
+</div>
 <p>Total de productos: {{ productos.length }}</p>
 
 @if (productos.length === 0) {
