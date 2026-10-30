@@ -84,4 +84,34 @@ export class ProductoComponent {
     this.guardarEnStorage();
     this.limpiar();
   }
+
+    editandoId: number | null = null;
+
+  editar(producto: Producto) {
+    this.editandoId = producto.id;
+    this.codigo = producto.codigo;
+    this.nombre = producto.nombre;
+    this.precio = producto.precio;
+    this.existencias = producto.existencias;
+    this.mensaje = '';
+  }
+
+  actualizar() {
+    if (!this.validar()) return;
+    const producto = this.productos.find(p => p.id === this.editandoId);
+    if (producto) {
+      producto.codigo = this.codigo.trim();
+      producto.nombre = this.nombre.trim();
+      producto.precio = this.precio!;
+      producto.existencias = this.existencias!;
+    }
+    this.guardarEnStorage();
+    this.cancelar();
+  }
+
+  cancelar() {
+    this.editandoId = null;
+    this.limpiar();
+    this.mensaje = '';
+  }
 }
