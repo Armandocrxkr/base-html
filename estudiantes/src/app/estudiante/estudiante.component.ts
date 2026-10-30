@@ -110,4 +110,11 @@ export class EstudianteComponent {
     this.limpiar();
     this.mensaje = '';
   }
+
+    eliminar(id: number) {
+    if (!confirm('¿Seguro que desea eliminar este estudiante?')) return;
+    this.estudiantes = this.estudiantes.filter(e => e.id !== id);
+    this.guardarEnStorage();
+    if (this.editandoId === id) this.cancelar();
+  }
 }

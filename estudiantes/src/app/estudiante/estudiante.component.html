@@ -26,6 +26,7 @@
         <td>{{ e.carrera }}</td>
         <td>{{ e.fechaIngreso }}</td>
         <button (click)="editar(e)">Editar</button>
+        <button (click)="eliminar(e.id)">Eliminar</button>
       </tr>
     }
   </table>
