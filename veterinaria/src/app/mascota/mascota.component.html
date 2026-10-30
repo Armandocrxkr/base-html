@@ -1,1 +1,23 @@
-<p>libro works!</p>
+<h2>Registro de mascotas</h2>
+<button (click)="cerrarSesion()">Cerrar sesión</button>
+<p>Total de mascotas: {{ mascotas.length }}</p>
+
+@if (mascotas.length === 0) {
+  <p>No hay mascotas registradas.</p>
+} @else {
+  <table border="1">
+    <tr>
+      <th>ID</th><th>Nombre</th><th>Especie</th><th>Edad (años)</th><th>Propietario</th><th>Acciones</th>
+    </tr>
+    @for (m of mascotas; track m.id) {
+      <tr>
+        <td>{{ m.id }}</td>
+        <td>{{ m.nombre }}</td>
+        <td>{{ m.especie }}</td>
+        <td>{{ m.edad }}</td>
+        <td>{{ m.propietario }}</td>
+        <td><!-- acciones --></td>
+      </tr>
+    }
+  </table>
+}
