@@ -80,4 +80,34 @@ export class MascotaComponent {
     this.guardarEnStorage();
     this.limpiar();
   }
+
+    editandoId: number | null = null;
+
+  editar(mascota: Mascota) {
+    this.editandoId = mascota.id;
+    this.nombre = mascota.nombre;
+    this.especie = mascota.especie;
+    this.edad = mascota.edad;
+    this.propietario = mascota.propietario;
+    this.mensaje = '';
+  }
+
+  actualizar() {
+    if (!this.validar()) return;
+    const mascota = this.mascotas.find(m => m.id === this.editandoId);
+    if (mascota) {
+      mascota.nombre = this.nombre.trim();
+      mascota.especie = this.especie.trim();
+      mascota.edad = this.edad!;
+      mascota.propietario = this.propietario.trim();
+    }
+    this.guardarEnStorage();
+    this.cancelar();
+  }
+
+  cancelar() {
+    this.editandoId = null;
+    this.limpiar();
+    this.mensaje = '';
+  }
 }

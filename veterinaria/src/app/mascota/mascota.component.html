@@ -6,7 +6,12 @@
   <label>Especie</label> <input type="text" [(ngModel)]="especie"><br>
   <label>Edad (años)</label> <input type="number" [(ngModel)]="edad"><br>
   <label>Propietario</label> <input type="text" [(ngModel)]="propietario"><br>
-  <button (click)="crear()">Guardar</button>
+    @if (editandoId === null) {
+    <button (click)="crear()">Guardar</button>
+  } @else {
+    <button (click)="actualizar()">Actualizar</button>
+    <button (click)="cancelar()">Cancelar</button>
+  }
   <p>{{ mensaje }}</p>
 </div>
 <p>Total de mascotas: {{ mascotas.length }}</p>
@@ -25,7 +30,7 @@
         <td>{{ m.especie }}</td>
         <td>{{ m.edad }}</td>
         <td>{{ m.propietario }}</td>
-        <td><!-- acciones --></td>
+        <button (click)="editar(m)">Editar</button>
       </tr>
     }
   </table>
