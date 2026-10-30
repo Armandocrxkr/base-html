@@ -1,5 +1,18 @@
 <h2>Agenda de tareas</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
+<div>
+  <h3>Datos de la tarea</h3>
+  <label>Título</label> <input type="text" [(ngModel)]="titulo"><br>
+  <label>Descripción</label> <textarea [(ngModel)]="descripcion"></textarea><br>
+  <label>Fecha límite</label> <input type="date" [(ngModel)]="fechaLimite"><br>
+  <label>Estado</label>
+  <select [(ngModel)]="estado">
+    <option value="Pendiente">Pendiente</option>
+    <option value="Completada">Completada</option>
+  </select><br>
+  <button (click)="crear()">Guardar</button>
+  <p>{{ mensaje }}</p>
+</div>
 <p>Total de tareas: {{ tareas.length }}</p>
 
 @if (tareas.length === 0) {
