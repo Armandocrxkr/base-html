@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 interface Mascota {
   id: number;
@@ -11,7 +12,7 @@ interface Mascota {
 
 @Component({
   selector: 'app-mascota',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './mascota.component.html',
   styleUrl: './mascota.component.css'
 })
@@ -34,5 +35,49 @@ export class MascotaComponent {
   cerrarSesion() {
     localStorage.removeItem('sesionVeterinaria');
     this.router.navigate(['/login']);
+  }
+
+    nombre = '';
+  especie = '';
+  edad: number | null = null;
+  propietario = '';
+  mensaje = '';
+
+  guardarEnStorage() {
+    localStorage.setItem('mascotasVeterinaria', JSON.stringify(this.mascotas));
+  }
+
+  limpiar() {
+    this.nombre = '';
+    this.especie = '';
+    this.edad = null;
+    this.propietario = '';
+  }
+
+  validar(): boolean {
+    if (this.nombre.trim() === '' || this.especie.trim() === '' || this.propietario.trim() === '') {
+      this.mensaje = 'Nombre, especie y propietario son obligatorios.';
+      return false;
+    }
+    if (this.edad === null || !Number.isInteger(this.edad) || this.edad < 0) {
+      this.mensaje = 'La edad debe ser un entero mayor o igual que cero.';
+      return false;
+    }
+    this.mensaje = '';
+    return true;
+  }
+
+  crear() {
+    if (!this.validar()) return;
+    const id = this.mascotas.length > 0 ? Math.max(...this.mascotas.map(m => m.id)) + 1 : 1;
+    this.mascotas.push({
+      id,
+      nombre: this.nombre.trim(),
+      especie: this.especie.trim(),
+      edad: this.edad!,
+      propietario: this.propietario.trim()
+    });
+    this.guardarEnStorage();
+    this.limpiar();
   }
 }

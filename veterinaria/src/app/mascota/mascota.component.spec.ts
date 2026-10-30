@@ -1,38 +1,21 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MascotaComponent } from './mascota.component';
 
-interface Mascota {
-  id: number;
-  nombre: string;
-  especie: string;
-  edad: number;
-  propietario: string;
-}
+describe('MascotaComponent', () => {
+  let component: MascotaComponent;
+  let fixture: ComponentFixture<MascotaComponent>;
 
-@Component({
-  selector: 'app-mascota',
-  imports: [],
-  templateUrl: './mascota.component.html',
-  styleUrl: './mascota.component.css'
-})
-export class MascotaComponent {
-  mascotas: Mascota[] = [];
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [MascotaComponent],
+    }).compileComponents();
 
-  constructor(private router: Router) {
-    if (!localStorage.getItem('sesionVeterinaria')) {
-      this.router.navigate(['/login']);
-      return;
-    }
-    this.cargar();
-  }
+    fixture = TestBed.createComponent(MascotaComponent);
+    component = fixture.componentInstance;
+    await fixture.whenStable();
+  });
 
-  cargar() {
-    const datos = localStorage.getItem('mascotasVeterinaria');
-    this.mascotas = datos ? JSON.parse(datos) : [];
-  }
-
-  cerrarSesion() {
-    localStorage.removeItem('sesionVeterinaria');
-    this.router.navigate(['/login']);
-  }
-}
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
