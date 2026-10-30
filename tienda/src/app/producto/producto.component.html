@@ -31,6 +31,7 @@
         <td>L {{ p.precio.toFixed(2) }}</td>
         <td>{{ p.existencias }}</td>
         <button (click)="editar(p)">Editar</button>
+        <button (click)="eliminar(p.id)">Eliminar</button>
       </tr>
     }
   </table>

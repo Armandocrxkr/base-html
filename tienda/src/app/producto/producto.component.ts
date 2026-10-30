@@ -114,4 +114,11 @@ export class ProductoComponent {
     this.limpiar();
     this.mensaje = '';
   }
+
+    eliminar(id: number) {
+    if (!confirm('¿Seguro que desea eliminar este producto?')) return;
+    this.productos = this.productos.filter(p => p.id !== id);
+    this.guardarEnStorage();
+    if (this.editandoId === id) this.cancelar();
+  }
 }
