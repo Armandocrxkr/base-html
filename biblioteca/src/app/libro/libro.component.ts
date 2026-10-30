@@ -80,4 +80,34 @@ export class LibroComponent {
     this.guardarEnStorage();
     this.limpiar();
   }
+
+    editandoId: number | null = null;
+
+  editar(libro: Libro) {
+    this.editandoId = libro.id;
+    this.codigo = libro.codigo;
+    this.titulo = libro.titulo;
+    this.autor = libro.autor;
+    this.anio = libro.anio;
+    this.mensaje = '';
+  }
+
+  actualizar() {
+    if (!this.validar()) return;
+    const libro = this.libros.find(l => l.id === this.editandoId);
+    if (libro) {
+      libro.codigo = this.codigo.trim();
+      libro.titulo = this.titulo.trim();
+      libro.autor = this.autor.trim();
+      libro.anio = this.anio!;
+    }
+    this.guardarEnStorage();
+    this.cancelar();
+  }
+
+  cancelar() {
+    this.editandoId = null;
+    this.limpiar();
+    this.mensaje = '';
+  }
 }
