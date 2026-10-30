@@ -110,4 +110,11 @@ export class LibroComponent {
     this.limpiar();
     this.mensaje = '';
   }
+
+    eliminar(id: number) {
+    if (!confirm('¿Seguro que desea eliminar este libro?')) return;
+    this.libros = this.libros.filter(l => l.id !== id);
+    this.guardarEnStorage();
+    if (this.editandoId === id) this.cancelar();
+  }
 }
