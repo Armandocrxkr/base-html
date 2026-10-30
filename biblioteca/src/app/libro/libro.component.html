@@ -1,1 +1,23 @@
-<p>libro works!</p>
+<h2>Catálogo de libros</h2>
+<button (click)="cerrarSesion()">Cerrar sesión</button>
+<p>Total de libros: {{ libros.length }}</p>
+
+@if (libros.length === 0) {
+  <p>No hay libros registrados.</p>
+} @else {
+  <table border="1">
+    <tr>
+      <th>ID</th><th>Código</th><th>Título</th><th>Autor</th><th>Año</th><th>Acciones</th>
+    </tr>
+    @for (l of libros; track l.id) {
+      <tr>
+        <td>{{ l.id }}</td>
+        <td>{{ l.codigo }}</td>
+        <td>{{ l.titulo }}</td>
+        <td>{{ l.autor }}</td>
+        <td>{{ l.anio }}</td>
+        <td><!-- acciones --></td>
+      </tr>
+    }
+  </table>
+}
