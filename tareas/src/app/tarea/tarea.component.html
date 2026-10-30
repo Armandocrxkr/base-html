@@ -10,7 +10,12 @@
     <option value="Pendiente">Pendiente</option>
     <option value="Completada">Completada</option>
   </select><br>
-  <button (click)="crear()">Guardar</button>
+    @if (editandoId === null) {
+    <button (click)="crear()">Guardar</button>
+  } @else {
+    <button (click)="actualizar()">Actualizar</button>
+    <button (click)="cancelar()">Cancelar</button>
+  }
   <p>{{ mensaje }}</p>
 </div>
 <p>Total de tareas: {{ tareas.length }}</p>
@@ -29,7 +34,9 @@
         <td>{{ t.descripcion }}</td>
         <td>{{ t.fechaLimite }}</td>
         <td>{{ t.estado }}</td>
-        <td><!-- acciones --></td>
+        <td>
+          <button (click)="editar(t)">Editar</button>
+        </td>
       </tr>
     }
   </table>

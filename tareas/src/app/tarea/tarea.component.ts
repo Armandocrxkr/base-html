@@ -84,4 +84,34 @@ export class TareaComponent {
     this.guardarEnStorage();
     this.limpiar();
   }
+
+    editandoId: number | null = null;
+
+  editar(tarea: Tarea) {
+    this.editandoId = tarea.id;
+    this.titulo = tarea.titulo;
+    this.descripcion = tarea.descripcion;
+    this.fechaLimite = tarea.fechaLimite;
+    this.estado = tarea.estado;
+    this.mensaje = '';
+  }
+
+  actualizar() {
+    if (!this.validar()) return;
+    const tarea = this.tareas.find(t => t.id === this.editandoId);
+    if (tarea) {
+      tarea.titulo = this.titulo.trim();
+      tarea.descripcion = this.descripcion.trim();
+      tarea.fechaLimite = this.fechaLimite;
+      tarea.estado = this.estado;
+    }
+    this.guardarEnStorage();
+    this.cancelar();
+  }
+
+  cancelar() {
+    this.editandoId = null;
+    this.limpiar();
+    this.mensaje = '';
+  }
 }
