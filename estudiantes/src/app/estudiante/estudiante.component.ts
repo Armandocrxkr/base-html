@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 interface Estudiante {
   id: number;
@@ -11,7 +12,7 @@ interface Estudiante {
 
 @Component({
   selector: 'app-estudiante',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './estudiante.component.html',
   styleUrl: './estudiante.component.css'
 })
@@ -78,5 +79,35 @@ export class EstudianteComponent {
     });
     this.guardarEnStorage();
     this.limpiar();
+  }
+
+  editandoId: number | null = null;
+
+  editar(estudiante: Estudiante) {
+    this.editandoId = estudiante.id;
+    this.cuenta = estudiante.cuenta;
+    this.nombre = estudiante.nombre;
+    this.carrera = estudiante.carrera;
+    this.fechaIngreso = estudiante.fechaIngreso;
+    this.mensaje = '';
+  }
+
+  actualizar() {
+    if (!this.validar()) return;
+    const estudiante = this.estudiantes.find(e => e.id === this.editandoId);
+    if (estudiante) {
+      estudiante.cuenta = this.cuenta.trim();
+      estudiante.nombre = this.nombre.trim();
+      estudiante.carrera = this.carrera.trim();
+      estudiante.fechaIngreso = this.fechaIngreso;
+    }
+    this.guardarEnStorage();
+    this.cancelar();
+  }
+
+  cancelar() {
+    this.editandoId = null;
+    this.limpiar();
+    this.mensaje = '';
   }
 }
