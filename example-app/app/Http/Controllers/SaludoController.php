@@ -12,5 +12,6 @@ return view('hola', [
 'nombre' => $nombre,
 'asignatura' => $asignatura
 ]);
+
 }
 }
