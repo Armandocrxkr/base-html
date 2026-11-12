@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión - AutoGest</title>
+    <link rel="icon" type="image/png" th:href="@{/img/logo-icon_1.png}" href="/img/logo-icon_1.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        turquoise: { DEFAULT: '#14B8B3', hover: '#0E9490', dark: '#2DD4CF', darkhover: '#22B8B3' },
+                        navy: { DEFAULT: '#0B2545', surface: '#1B2333' },
+                        graphite: '#14181D',
+                    },
+                    fontFamily: {
+                        display: ['Manrope', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white dark:bg-graphite font-sans transition-colors duration-300">
+
+<div class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+
+    <!-- ============ PANEL DE MARCA (izquierda) ============ -->
+    <div class="hidden lg:flex relative flex-col justify-between bg-navy dark:bg-navy-surface p-12 overflow-hidden">
+
+        <svg class="absolute -left-20 -bottom-24 w-[460px] h-[460px] opacity-[0.10] pointer-events-none" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="100" cy="100" r="86" class="text-turquoise-dark"/>
+            <circle cx="100" cy="100" r="58" class="text-turquoise-dark"/>
+            <path d="M100 14 L100 42" class="text-turquoise-dark"/>
+            <circle cx="100" cy="14" r="6" fill="currentColor" class="text-turquoise-dark"/>
+            <path d="M158 62 L136 78" class="text-turquoise-dark"/>
+            <circle cx="158" cy="62" r="6" fill="currentColor" class="text-turquoise-dark"/>
+        </svg>
+
+        <a th:href="@{/}" href="index.html" class="relative flex items-center gap-2.5">
+            <img th:src="@{/img/logo-icon_1.png}" src="/img/logo-icon.png" alt="AutoGest" class="h-9 w-9 object-contain">
+            <span class="font-display font-extrabold text-lg tracking-tight text-white">AUTOGEST</span>
+        </a>
+
+        <div class="relative max-w-sm">
+            <h2 class="font-display font-bold text-3xl leading-snug text-white">
+                Acelera tu gestión.<br>
+                <span class="text-turquoise-dark">Frena tus problemas.</span>
+            </h2>
+            <p class="mt-4 text-sm text-slate-300 leading-relaxed">
+                Entrá para ver el estado de tus vehículos, tu inventario de repuestos y tus clientes, todo en un solo lugar.
+            </p>
+        </div>
+
+        <p class="relative text-xs text-slate-400">© 2026 AutoGest</p>
+    </div>
+
+    <!-- ============ PANEL DE FORMULARIO (derecha) ============ -->
+    <div class="flex flex-col justify-center px-6 sm:px-12 lg:px-20 py-12 relative">
+
+        <button id="theme-toggle" aria-label="Cambiar modo claro u oscuro"
+                class="absolute top-6 right-6 h-9 w-9 rounded-full border border-slate-200 dark:border-white/10 flex items-center justify-center text-navy dark:text-slate-200 hover:border-turquoise dark:hover:border-turquoise-dark transition-colors">
+            <svg id="icon-moon" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            <svg id="icon-sun" class="h-4 w-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36 6.36l-.7-.7M6.34 6.34l-.7-.7m12.72 0l-.7.7M6.34 17.66l-.7.7M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        </button>
+
+        <div class="lg:hidden flex items-center gap-2.5 mb-10">
+            <img th:src="@{/img/logo-icon.png}" src="/img/logo-icon.png" alt="AutoGest" class="h-8 w-8 object-contain">
+            <span class="font-display font-extrabold text-base tracking-tight text-navy dark:text-white">AUTOGEST</span>
+        </div>
+
+        <div class="max-w-sm w-full mx-auto">
+            <h1 class="font-display font-bold text-2xl text-navy dark:text-white">Iniciá sesión</h1>
+            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Ingresá tu usuario y contraseña para continuar.</p>
+
+            <form th:action="@{/usuario/login}" method="post" class="mt-8 flex flex-col gap-5">
+
+                <div th:if="${error}" class="rounded-lg bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 px-4 py-3 text-sm text-red-600 dark:text-red-400" th:text="${error}">
+                    Usuario o contraseña incorrectos.
+                </div>
+
+                <div th:if="${exito}" class="rounded-lg bg-turquoise/10 border border-turquoise/20 dark:border-turquoise-dark/20 px-4 py-3 text-sm text-turquoise-hover dark:text-turquoise-dark" th:text="${exito}">
+                    Cuenta creada correctamente.
+                </div>
+
+                <div>
+                    <label for="usuario" class="block text-sm font-medium text-navy dark:text-white mb-1.5">Usuario</label>
+                    <input type="text" id="usuario" name="usuario" required autofocus placeholder="kmartinez"
+                           class="w-full h-11 px-3.5 rounded-lg bg-white dark:bg-navy-surface border border-slate-200 dark:border-white/10 text-sm text-navy dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-turquoise dark:focus:ring-turquoise-dark focus:border-transparent transition-shadow">
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-navy dark:text-white mb-1.5">Contraseña</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••"
+                           class="w-full h-11 px-3.5 rounded-lg bg-white dark:bg-navy-surface border border-slate-200 dark:border-white/10 text-sm text-navy dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-turquoise dark:focus:ring-turquoise-dark focus:border-transparent transition-shadow">
+                </div>
+
+                <button type="submit"
+                        class="mt-2 h-11 rounded-lg bg-turquoise hover:bg-turquoise-hover dark:bg-turquoise-dark dark:hover:bg-turquoise-darkhover text-white dark:text-navy font-semibold text-sm transition-colors">
+                    Entrar
+                </button>
+            </form>
+
+            <p class="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
+                ¿No tenés cuenta?
+                <a th:href="@{/usuario/registro}" href="registro.html" class="font-medium text-turquoise dark:text-turquoise-dark hover:underline">Registrate</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const root = document.documentElement;
+    const iconMoon = document.getElementById('icon-moon');
+    const iconSun = document.getElementById('icon-sun');
+    const toggleBtn = document.getElementById('theme-toggle');
+
+    function applyTheme(isDark) {
+        root.classList.toggle('dark', isDark);
+        iconMoon.classList.toggle('hidden', isDark);
+        iconSun.classList.toggle('hidden', !isDark);
+    }
+
+    const saved = localStorage.getItem('autogest-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(saved ? saved === 'dark' : prefersDark);
+
+    toggleBtn.addEventListener('click', () => {
+        const isDark = !root.classList.contains('dark');
+        applyTheme(isDark);
+        localStorage.setItem('autogest-theme', isDark ? 'dark' : 'light');
+    });
+</script>
+
+</body>
+</html>

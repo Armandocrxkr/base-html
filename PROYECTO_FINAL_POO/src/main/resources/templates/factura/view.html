@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura - AutoGest</title>
+    <link rel="icon" type="image/png" th:href="@{/img/logo-icon_1.png}" href="/img/logo-icon_1.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        turquoise: { DEFAULT: '#14B8B3', hover: '#0E9490', dark: '#2DD4CF', darkhover: '#22B8B3' },
+                        navy: { DEFAULT: '#0B2545', surface: '#1B2333' },
+                        graphite: '#14181D'
+                    },
+                    fontFamily: { display: ['Manrope', 'sans-serif'], sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        @media print {
+            .no-imprimir { display: none !important; }
+            #ficha-factura { border: none !important; box-shadow: none !important; }
+            body { background: white !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 dark:bg-graphite dark:text-slate-200 font-sans">
+
+<div id="overlay" class="fixed inset-0 z-40 hidden bg-navy/40 lg:hidden no-imprimir"></div>
+
+<div class="no-imprimir" th:replace="~{fragments/sidebar :: sidebar('factura')}"></div>
+
+<main class="min-h-screen lg:ml-72">
+    <header class="no-imprimir flex h-20 items-center justify-between border-b border-slate-200 bg-white px-5 dark:border-white/5 dark:bg-graphite sm:px-8">
+        <div class="flex items-center gap-3">
+            <button id="menu-button" class="rounded-lg p-2 text-navy hover:bg-slate-100 dark:text-white dark:hover:bg-white/10 lg:hidden" aria-label="Abrir menú"><i class="bi bi-list text-xl" aria-hidden="true"></i></button>
+            <div>
+                <p class="text-sm text-slate-500 dark:text-slate-400"><a th:href="@{/factura}" href="#" class="hover:text-turquoise dark:hover:text-turquoise-dark">Facturas</a> / Detalle</p>
+                <h1 class="font-display text-xl font-bold text-navy dark:text-white">Factura #<span th:text="${factura.id}">1</span></h1>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="history.back()" class="flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-navy transition-colors hover:border-turquoise hover:text-turquoise dark:border-white/10 dark:text-white dark:hover:border-turquoise-dark dark:hover:text-turquoise-dark">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver
+            </button>
+            <button id="theme-toggle" aria-label="Cambiar tema" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-navy hover:border-turquoise dark:border-white/10 dark:text-white transition-colors">
+                <i id="icon-moon" class="bi bi-moon text-sm" aria-hidden="true"></i>
+                <i id="icon-sun" class="bi bi-sun text-sm hidden" aria-hidden="true"></i>
+            </button>
+            <button onclick="window.print()" class="flex items-center gap-2 rounded-lg bg-turquoise px-4 py-2 text-sm font-semibold text-white dark:text-navy transition-colors hover:bg-turquoise-hover">
+                <i class="bi bi-printer" aria-hidden="true"></i> Imprimir
+            </button>
+        </div>
+    </header>
+
+    <section class="mx-auto max-w-2xl px-5 py-8 sm:px-8">
+
+        <div th:if="${exito}" class="no-imprimir mb-5 rounded-lg border border-turquoise/20 bg-turquoise/10 px-4 py-3 text-sm text-turquoise-hover dark:text-turquoise-dark" th:text="${exito}">Éxito</div>
+
+        <div id="ficha-factura" class="rounded-xl border border-slate-200 bg-white p-8 dark:border-white/5 dark:bg-navy-surface">
+
+            <div class="flex items-center justify-between border-b border-slate-100 pb-6 dark:border-white/5">
+                <div class="flex items-center gap-2.5">
+                    <img th:src="@{/img/logo-icon_1.png}" src="/img/logo-icon_1.png" alt="AutoGest" class="h-9 w-9 object-contain">
+                    <span class="font-display font-extrabold text-lg text-navy dark:text-white">AUTOGEST</span>
+                </div>
+                <div class="text-right">
+                    <p class="font-display font-bold text-navy dark:text-white">Factura #<span th:text="${factura.id}">1</span></p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400" th:text="${factura.fecha}">2026-07-20 14:30</p>
+                </div>
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 gap-6">
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-wide text-slate-400">Cliente</p>
+                    <p class="mt-1 font-medium text-navy dark:text-white" th:text="${factura.cliente_nombre}">Juan Pérez</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400" th:text="${factura.correo}">correo@ejemplo.com</p>
+                </div>
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-wide text-slate-400">Vehículo</p>
+                    <p class="mt-1 font-medium text-navy dark:text-white">
+                        <span th:text="${factura.marca}">Toyota</span> <span th:text="${factura.modelo}">Corolla</span> (<span th:text="${factura.anio}">2015</span>)
+                    </p>
+                    <p class="font-mono text-sm text-slate-500 dark:text-slate-400" th:text="${factura.placa}">ABC-1234</p>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-400">Tipo de reparación</p>
+                <p class="mt-1 text-navy dark:text-white" th:text="${factura.tipo_reparacion}">Cambio de batería</p>
+            </div>
+
+            <table class="mt-6 w-full text-left text-sm">
+                <thead class="border-b border-slate-200 dark:border-white/10">
+                <tr class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    <th class="py-2">Repuesto</th>
+                    <th class="py-2 text-center">Cantidad</th>
+                    <th class="py-2 text-right">Precio unit.</th>
+                    <th class="py-2 text-right">Subtotal</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-white/5">
+                <tr th:each="d : ${detalle}">
+                    <td class="py-2 text-navy dark:text-white" th:text="${d.repuesto_nombre}">Batería 12V</td>
+                    <td class="py-2 text-center" th:text="${d.cantidad}">1</td>
+                    <td class="py-2 text-right font-mono" th:text="'L. ' + ${#numbers.formatDecimal(d.precio_unitario, 1, 'COMMA', 2, 'POINT')}">L. 1,800.00</td>
+                    <td class="py-2 text-right font-mono" th:text="'L. ' + ${#numbers.formatDecimal(d.precio_unitario * d.cantidad, 1, 'COMMA', 2, 'POINT')}">L. 1,800.00</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="mt-6 ml-auto max-w-xs space-y-2 border-t border-slate-200 pt-4 dark:border-white/10">
+                <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
+                    <span>Impuesto (20% repuestos)</span>
+                    <span class="font-mono">L. <span th:text="${#numbers.formatDecimal(factura.impuesto, 1, 'COMMA', 2, 'POINT')}">0.00</span></span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
+                    <span>Mano de obra</span>
+                    <span class="font-mono">L. <span th:text="${#numbers.formatDecimal(factura.mano_obra, 1, 'COMMA', 2, 'POINT')}">300.00</span></span>
+                </div>
+                <div class="flex items-center justify-between font-display font-bold text-navy dark:text-white">
+                    <span>Total</span>
+                    <span class="font-mono text-lg">L. <span th:text="${#numbers.formatDecimal(factura.monto_total, 1, 'COMMA', 2, 'POINT')}">2,100.00</span></span>
+                </div>
+            </div>
+
+            <div class="mt-6 border-t border-slate-100 pt-4 dark:border-white/10">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-400">Método de pago</p>
+                <div th:if="${factura.metodo_pago == 'EFECTIVO'}" class="mt-1 flex items-center gap-2 text-navy dark:text-white">
+                    <i class="bi bi-cash-stack" aria-hidden="true"></i> Efectivo
+                </div>
+                <div th:if="${factura.metodo_pago == 'TARJETA'}" class="mt-1 flex items-center gap-2 text-navy dark:text-white">
+                    <i class="bi bi-credit-card" aria-hidden="true"></i>
+                    <span th:text="${factura.tarjeta_tipo == 'CREDITO'} ? 'Crédito' : 'Débito'">Crédito</span>
+                    <span class="font-mono text-sm text-slate-500 dark:text-slate-400">terminada en <span th:text="${factura.tarjeta_ultimos_digitos}">1234</span></span>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const root = document.documentElement;
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuButton = document.getElementById('menu-button');
+    function toggleMenu() { sidebar.classList.toggle('-translate-x-full'); overlay.classList.toggle('hidden'); }
+    menuButton?.addEventListener('click', toggleMenu);
+    overlay?.addEventListener('click', toggleMenu);
+
+    const iconMoon = document.getElementById('icon-moon');
+    const iconSun = document.getElementById('icon-sun');
+    function applyTheme(isDark) {
+        root.classList.toggle('dark', isDark);
+        iconMoon.classList.toggle('hidden', isDark);
+        iconSun.classList.toggle('hidden', !isDark);
+    }
+    const savedTheme = localStorage.getItem('autogest-theme');
+    applyTheme(savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        const isDark = !root.classList.contains('dark');
+        applyTheme(isDark);
+        localStorage.setItem('autogest-theme', isDark ? 'dark' : 'light');
+    });
+</script>
+</body>
+</html>

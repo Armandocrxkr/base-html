@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar vehículo - AutoGest</title>
+    <link rel="icon" type="image/png" th:href="@{/img/logo-icon_1.png}" href="/img/logo-icon_1.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        turquoise: { DEFAULT: '#14B8B3', hover: '#0E9490', dark: '#2DD4CF', darkhover: '#22B8B3' },
+                        navy: { DEFAULT: '#0B2545', surface: '#1B2333' },
+                        graphite: '#14181D'
+                    },
+                    fontFamily: { display: ['Manrope', 'sans-serif'], sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-700 dark:bg-graphite dark:text-slate-200 font-sans">
+
+<div id="overlay" class="fixed inset-0 z-40 hidden bg-navy/40 lg:hidden"></div>
+
+<div th:replace="~{fragments/sidebar :: sidebar('vehiculo')}"></div>
+
+<main class="min-h-screen lg:ml-72">
+    <header class="flex h-20 items-center justify-between border-b border-slate-200 bg-white px-5 dark:border-white/5 dark:bg-graphite sm:px-8">
+        <div class="flex items-center gap-3">
+            <button id="menu-button" class="rounded-lg p-2 text-navy hover:bg-slate-100 dark:text-white dark:hover:bg-white/10 lg:hidden" aria-label="Abrir menú"><i class="bi bi-list text-xl" aria-hidden="true"></i></button>
+            <div>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                    <a th:href="@{/vehiculo}" href="#" class="hover:text-turquoise dark:hover:text-turquoise-dark">Vehículos</a> / Editar
+                </p>
+                <h1 class="font-display text-xl font-bold text-navy dark:text-white">Editar vehículo</h1>
+            </div>
+        </div>
+        <button id="theme-toggle" aria-label="Cambiar tema" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-navy hover:border-turquoise dark:border-white/10 dark:text-white transition-colors">
+            <i id="icon-moon" class="bi bi-moon text-sm" aria-hidden="true"></i>
+            <i id="icon-sun" class="bi bi-sun text-sm hidden" aria-hidden="true"></i>
+        </button>
+        <button onclick="history.back()" class="flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-navy transition-colors hover:border-turquoise hover:text-turquoise dark:border-white/10 dark:text-white dark:hover:border-turquoise-dark dark:hover:text-turquoise-dark">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver
+        </button>
+    </header>
+
+    <section class="mx-auto max-w-2xl px-5 py-8 sm:px-8">
+
+        <div th:if="${error}" class="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400" th:text="${error}">
+            Error
+        </div>
+        <div id="error-placa" class="mb-5 hidden rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400">
+            La placa debe tener 3 letras y 4 números (ej. ABC-1234).
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-white p-6 dark:border-white/5 dark:bg-navy-surface sm:p-8">
+
+            <form th:action="@{/vehiculo/editar/{id}(id=${vehiculo.id})}" method="post" class="grid grid-cols-1 gap-5 sm:grid-cols-2" id="form-vehiculo">
+
+                <!-- ============ PLACA ============ -->
+                <div>
+                    <label for="placaLetras" class="mb-1.5 block text-sm font-medium text-navy dark:text-white">Placa</label>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="placaLetras" maxlength="3" autocomplete="off"
+                               class="h-11 w-20 rounded-lg border border-slate-200 bg-white px-3 text-center font-mono text-sm uppercase tracking-widest text-navy focus:border-transparent focus:outline-none focus:ring-2 focus:ring-turquoise dark:border-white/10 dark:bg-graphite dark:text-white">
+                        <span class="font-mono text-lg text-slate-400 select-none">-</span>
+                        <input type="text" id="placaNumeros" maxlength="4" autocomplete="off" inputmode="numeric"
+                               class="h-11 w-24 rounded-lg border border-slate-200 bg-white px-3 text-center font-mono text-sm text-navy focus:border-transparent focus:outline-none focus:ring-2 focus:ring-turquoise dark:border-white/10 dark:bg-graphite dark:text-white">
+                    </div>
+                    <input type="hidden" id="placa" name="placa">
+                    <p class="mt-1 text-xs text-slate-400">Formato: 3 letras + 4 números</p>
+                </div>
+
+                <!-- ============ AÑO ============ -->
+                <div>
+                    <label for="anio" class="mb-1.5 block text-sm font-medium text-navy dark:text-white">Año</label>
+                    <div class="relative">
+                        <select id="anio" name="anio" required
+                                class="h-11 w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 pr-9 text-sm text-navy focus:border-transparent focus:outline-none focus:ring-2 focus:ring-turquoise dark:border-white/10 dark:bg-graphite dark:text-white">
+                            <option th:each="a : ${#numbers.sequence(2027, 1980, -1)}" th:value="${a}" th:text="${a}"
+                                    th:selected="${a == vehiculo.anio}">2024</option>
+                        </select>
+                        <i class="bi bi-chevron-down pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400" aria-hidden="true"></i>
+                    </div>
+                </div>
+
+                <!-- ============ MARCA ============ -->
+                <div>
+                    <label for="marcaSelect" class="mb-1.5 block text-sm font-medium text-navy dark:text-white">Marca</label>
+                    <div class="relative">
+                        <select id="marcaSelect"
+                                class="h-11 w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 pr-9 text-sm text-navy focus:border-transparent focus:outline-none focus:ring-2 focus:ring-turquoise dark:border-white/10 dark:bg-graphite dark:text-white">
+                            <option th:each="m : ${marcas}" th:value="${m}" th:text="${m}"
+                                    th:selected="${m == vehiculo.marca}">Marca</option>
+                            <option value="__nueva__">+ Agregar marca nueva</option>
+                        </select>
+                        <i class="bi bi-chevron-down pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400" aria-hidden="true"></i>
+                    </div>
+                    <input type="text" id="marcaNueva" placeholder="Nombre de la marca nueva" class="mt-2 hidden h-11 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-navy focus:border-transparent focus:outline-none focus:ring-2 focus:ring-turquoise dark:border-white/10 dark:bg-graphite dark:text-white">
+                    <input type="hidden" id="marca" name="marca">
+                </div>
+
+                <!-- ============ MODELO ============ -->
+                <div>
+                    <label for="modeloSelect" class="mb-1.5 block text-sm font-medium text-navy dark:text-white">Modelo</label>
+                    <div class="relative">
+                        <select id="modeloSelect"
+                                class="h-11 w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 pr-9 text-sm text-navy transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-turquoise disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 dark:border-white/10 dark:bg-graphite dark:text-white dark:disabled:bg-white/5">
+                            <option value="">Cargando...</option>
+                        </select>
+                        <i class="bi bi-chevron-down pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400" aria-hidden="true"></i>
+                    </div>
+                    <input type="text" id="modeloNuevo" placeholder="Nombre del modelo nuevo" class="mt-2 hidden h-11 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-navy focus:border-transparent focus:outline-none focus:ring-2 focus:ring-turquoise dark:border-white/10 dark:bg-graphite dark:text-white">
+                    <input type="hidden" id="modelo" name="modelo">
+                </div>
+
+                <div>
+                    <label for="color" class="mb-1.5 block text-sm font-medium text-navy dark:text-white">Color</label>
+                    <input type="text" id="color" name="color" required th:value="${vehiculo.color}"
+                           class="h-11 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-navy focus:border-transparent focus:outline-none focus:ring-2 focus:ring-turquoise dark:border-white/10 dark:bg-graphite dark:text-white">
+                </div>
+
+                <div>
+                    <label for="idCliente" class="mb-1.5 block text-sm font-medium text-navy dark:text-white">Cliente dueño</label>
+                    <div class="relative">
+                        <select id="idCliente" name="idCliente" required
+                                class="h-11 w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 pr-9 text-sm text-navy focus:border-transparent focus:outline-none focus:ring-2 focus:ring-turquoise dark:border-white/10 dark:bg-graphite dark:text-white">
+                            <option th:each="c : ${clientes}" th:value="${c[0]}" th:text="${c[1]}"
+                                    th:selected="${c[0] == vehiculo.idCliente}">Cliente</option>
+                        </select>
+                        <i class="bi bi-chevron-down pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400" aria-hidden="true"></i>
+                    </div>
+                </div>
+
+                <div class="sm:col-span-2 mt-2 flex items-center gap-3">
+                    <button type="submit"
+                            class="h-11 rounded-lg bg-turquoise px-6 text-sm font-semibold text-white transition-colors hover:bg-turquoise-hover dark:text-navy dark:hover:bg-turquoise-darkhover">
+                        Guardar cambios
+                    </button>
+                    <a th:href="@{/vehiculo/{id}(id=${vehiculo.id})}" href="#" class="text-sm font-medium text-slate-500 hover:text-navy dark:text-slate-400 dark:hover:text-white">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+
+<!-- Datos precargados del vehículo y de pares marca+modelo existentes -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const marcaModeloData = /*[[${marcaModelo}]]*/ [];
+    const placaActual = /*[[${vehiculo.placa}]]*/ '';
+    const marcaActual = /*[[${vehiculo.marca}]]*/ '';
+    const modeloActual = /*[[${vehiculo.modelo}]]*/ '';
+    /*]]>*/
+</script>
+
+<script>
+    const root = document.documentElement;
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuButton = document.getElementById('menu-button');
+    function toggleMenu() { sidebar.classList.toggle('-translate-x-full'); overlay.classList.toggle('hidden'); }
+    menuButton?.addEventListener('click', toggleMenu);
+    overlay?.addEventListener('click', toggleMenu);
+
+    const iconMoon = document.getElementById('icon-moon');
+    const iconSun = document.getElementById('icon-sun');
+    function applyTheme(isDark) {
+        root.classList.toggle('dark', isDark);
+        iconMoon.classList.toggle('hidden', isDark);
+        iconSun.classList.toggle('hidden', !isDark);
+    }
+    const savedTheme = localStorage.getItem('autogest-theme');
+    applyTheme(savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        const isDark = !root.classList.contains('dark');
+        applyTheme(isDark);
+        localStorage.setItem('autogest-theme', isDark ? 'dark' : 'light');
+    });
+
+    // ============ Placa: precargada, separada en letras/números ============
+    const placaLetras = document.getElementById('placaLetras');
+    const placaNumeros = document.getElementById('placaNumeros');
+    const placaHidden = document.getElementById('placa');
+    const errorPlaca = document.getElementById('error-placa');
+
+    const partesPlaca = placaActual.split('-');
+    placaLetras.value = partesPlaca[0] || '';
+    placaNumeros.value = partesPlaca[1] || '';
+
+    placaLetras.addEventListener('input', () => {
+        placaLetras.value = placaLetras.value.replace(/[^a-zA-Z]/g, '').toUpperCase().slice(0, 3);
+    });
+    placaNumeros.addEventListener('input', () => {
+        placaNumeros.value = placaNumeros.value.replace(/[^0-9]/g, '').slice(0, 4);
+    });
+
+    // ============ Marca / Modelo en cascada, precargados ============
+    const marcaSelect = document.getElementById('marcaSelect');
+    const marcaNueva = document.getElementById('marcaNueva');
+    const marcaHidden = document.getElementById('marca');
+
+    const modeloSelect = document.getElementById('modeloSelect');
+    const modeloNuevo = document.getElementById('modeloNuevo');
+    const modeloHidden = document.getElementById('modelo');
+
+    function poblarModelos(marcaElegida, modeloAMantener) {
+        modeloSelect.innerHTML = '';
+        modeloNuevo.classList.add('hidden');
+
+        if (!marcaElegida) {
+            modeloSelect.disabled = true;
+            modeloSelect.classList.remove('hidden');
+            const opcion = document.createElement('option');
+            opcion.value = '';
+            opcion.textContent = 'Seleccioná una marca primero';
+            modeloSelect.appendChild(opcion);
+            return;
+        }
+
+        modeloSelect.disabled = false;
+        modeloSelect.classList.remove('hidden');
+
+        const modelosDeMarca = [...new Set(
+            marcaModeloData.filter(mm => mm.marca === marcaElegida).map(mm => mm.modelo)
+        )];
+
+        // Aseguramos que el modelo actual del vehículo aparezca como opción, aunque ya no combine con otra marca
+        if (modeloAMantener && !modelosDeMarca.includes(modeloAMantener)) {
+            modelosDeMarca.unshift(modeloAMantener);
+        }
+
+        modelosDeMarca.forEach(modelo => {
+            const opcion = document.createElement('option');
+            opcion.value = modelo;
+            opcion.textContent = modelo;
+            if (modelo === modeloAMantener) opcion.selected = true;
+            modeloSelect.appendChild(opcion);
+        });
+
+        const opcionNueva = document.createElement('option');
+        opcionNueva.value = '__nuevo__';
+        opcionNueva.textContent = '+ Agregar modelo nuevo';
+        modeloSelect.appendChild(opcionNueva);
+    }
+
+    marcaSelect.addEventListener('change', () => {
+        if (marcaSelect.value === '__nueva__') {
+            marcaNueva.classList.remove('hidden');
+            marcaNueva.focus();
+            modeloSelect.classList.add('hidden');
+            modeloNuevo.classList.remove('hidden');
+        } else {
+            marcaNueva.classList.add('hidden');
+            marcaNueva.value = '';
+            poblarModelos(marcaSelect.value, '');
+        }
+    });
+
+    modeloSelect.addEventListener('change', () => {
+        if (modeloSelect.value === '__nuevo__') {
+            modeloNuevo.classList.remove('hidden');
+            modeloNuevo.focus();
+        } else {
+            modeloNuevo.classList.add('hidden');
+            modeloNuevo.value = '';
+        }
+    });
+
+    // Estado inicial: precargar modelo actual según la marca actual
+    poblarModelos(marcaSelect.value, modeloActual);
+
+    // ============ Validación y armado final antes de enviar ============
+    document.getElementById('form-vehiculo').addEventListener('submit', (e) => {
+        if (placaLetras.value.length !== 3 || placaNumeros.value.length !== 4) {
+            e.preventDefault();
+            errorPlaca.classList.remove('hidden');
+            placaLetras.focus();
+            return;
+        }
+        errorPlaca.classList.add('hidden');
+        placaHidden.value = placaLetras.value + '-' + placaNumeros.value;
+
+        const marcaFinal = marcaSelect.value === '__nueva__' ? marcaNueva.value.trim() : marcaSelect.value;
+        if (!marcaFinal) {
+            e.preventDefault();
+            alert('Elegí o escribí una marca.');
+            return;
+        }
+        marcaHidden.value = marcaFinal;
+
+        const modeloFinal = (marcaSelect.value === '__nueva__' || modeloSelect.value === '__nuevo__')
+            ? modeloNuevo.value.trim()
+            : modeloSelect.value;
+        if (!modeloFinal) {
+            e.preventDefault();
+            alert('Elegí o escribí un modelo.');
+            return;
+        }
+        modeloHidden.value = modeloFinal;
+    });
+</script>
+</body>
+</html>

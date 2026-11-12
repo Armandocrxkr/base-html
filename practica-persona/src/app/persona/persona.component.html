@@ -1,0 +1,40 @@
+<h2>Personas</h2>
+<button (click)="cerrarSesion()">Cerrar sesión</button>
+
+<div>
+  <h3>Datos de la persona</h3>
+  <label>Nombre</label> <input type="text" [(ngModel)]="nombre"><br>
+  <label>Apellido</label> <input type="text" [(ngModel)]="apellido"><br>
+  <label>Edad</label> <input type="number" [(ngModel)]="edad"><br>
+  @if (editandoId === null) {
+    <button (click)="crear()">Guardar</button>
+  } @else {
+    <button (click)="actualizar()">Actualizar</button>
+    <button (click)="cancelar()">Cancelar</button>
+  }
+  <p>{{ mensaje }}</p>
+</div>
+
+<p>Total de personas: {{ personas.length }}</p>
+
+@if (personas.length === 0) {
+  <p>No hay personas registradas.</p>
+} @else {
+  <table border="1">
+    <tr>
+      <th>ID</th><th>Nombre</th><th>Apellido</th><th>Edad</th><th>Acciones</th>
+    </tr>
+    @for (p of personas; track p.id) {
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.apellido }}</td>
+        <td>{{ p.edad }}</td>
+        <td>
+          <button (click)="editar(p)">Editar</button>
+          <button (click)="eliminar(p.id)">Eliminar</button>
+        </td>
+      </tr>
+    }
+  </table>
+}

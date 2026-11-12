@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoGest</title>
+
+    <link rel="icon" type="image/png" th:href="@{/img/logo-icon_1.png}" href="/img/logo-icon_1.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        turquoise: { DEFAULT: '#14B8B3', hover: '#0E9490', dark: '#2DD4CF', darkhover: '#22B8B3' },
+                        navy: { DEFAULT: '#0B2545', surface: '#1B2333' },
+                        graphite: '#14181D',
+                    },
+                    fontFamily: {
+                        display: ['Manrope', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+
+        /* Transición suave para la barra de progreso */
+        #stepper-bar {
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Transición suave para los dots del stepper */
+        .stepper-dot {
+            transition: background-color 0.35s ease, border-color 0.35s ease,
+            color 0.35s ease, box-shadow 0.35s ease;
+        }
+        .stepper-label {
+            transition: color 0.35s ease, font-weight 0.35s ease;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-graphite font-sans transition-colors duration-300">
+
+<!-- ============ NAV ============ -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-graphite/80 backdrop-blur-sm border-b border-slate-100 dark:border-white/5">
+    <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+            <img th:src="@{/img/logo-icon_1.png}" src="/img/logo-icon.png" alt="AutoGest" class="h-9 w-9 object-contain">
+            <span class="font-display font-extrabold text-lg tracking-tight text-navy dark:text-white">AUTOGEST</span>
+        </div>
+
+        <nav class="flex items-center gap-3">
+            <button id="theme-toggle" aria-label="Cambiar modo claro u oscuro"
+                    class="h-9 w-9 rounded-full border border-slate-200 dark:border-white/10 flex items-center justify-center text-navy dark:text-slate-200 hover:border-turquoise dark:hover:border-turquoise-dark transition-colors">
+                <svg id="icon-moon" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                <svg id="icon-sun" class="h-4 w-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36 6.36l-.7-.7M6.34 6.34l-.7-.7m12.72 0l-.7.7M6.34 17.66l-.7.7M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            </button>
+            <a th:href="@{/usuario/login}" href="#"
+               class="px-4 py-2 text-sm font-medium text-navy dark:text-white hover:text-turquoise dark:hover:text-turquoise-dark transition-colors">
+                Iniciar sesión
+            </a>
+            <a th:href="@{/usuario/registro}" href="#"
+               class="px-4 py-2 rounded-lg text-sm font-medium bg-turquoise hover:bg-turquoise-hover dark:bg-turquoise-dark dark:hover:bg-turquoise-darkhover text-white dark:text-navy transition-colors">
+                Registro
+            </a>
+        </nav>
+    </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<main class="relative overflow-hidden">
+    <!-- Fondo decorativo -->
+    <svg class="absolute -right-24 top-24 w-[520px] h-[520px] opacity-[0.07] dark:opacity-[0.12] pointer-events-none" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.4">
+        <circle cx="100" cy="100" r="86" class="text-navy dark:text-turquoise-dark"/>
+        <circle cx="100" cy="100" r="58" class="text-turquoise dark:text-turquoise-dark"/>
+        <path d="M100 14 L100 42" class="text-navy dark:text-turquoise-dark"/>
+        <circle cx="100" cy="14" r="6" fill="currentColor" class="text-turquoise dark:text-turquoise-dark"/>
+        <path d="M158 62 L136 78" class="text-navy dark:text-turquoise-dark"/>
+        <circle cx="158" cy="62" r="6" fill="currentColor" class="text-turquoise dark:text-turquoise-dark"/>
+        <path d="M42 138 L64 122" class="text-navy dark:text-turquoise-dark"/>
+        <circle cx="42" cy="138" r="6" fill="currentColor" class="text-turquoise dark:text-turquoise-dark"/>
+    </svg>
+
+    <section class="max-w-6xl mx-auto px-6 pt-44 pb-20">
+        <!-- Hero Content -->
+        <div class="max-w-2xl">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-turquoise/10 text-turquoise-hover dark:bg-turquoise-dark/10 dark:text-turquoise-dark mb-6">
+                Taller automotriz · Yonker · Inventario
+            </span>
+            <h1 class="font-display font-extrabold text-5xl md:text-6xl leading-[1.05] text-navy dark:text-white">
+                Acelera tu gestión.<br>
+                <span class="text-turquoise dark:text-turquoise-dark">Frena tus problemas.</span>
+            </h1>
+            <p class="mt-6 text-lg text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed">
+                AutoGest centraliza tus vehículos, repuestos, clientes y proveedores en un
+                solo lugar, para que tu taller deje de operar a base de cuadernos y hojas sueltas.
+            </p>
+            <div class="mt-9 flex flex-wrap items-center gap-4">
+                <a th:href="@{/usuario/registro}" href="#"
+                   class="px-6 py-3 rounded-lg bg-turquoise hover:bg-turquoise-hover dark:bg-turquoise-dark dark:hover:bg-turquoise-darkhover text-white dark:text-navy font-semibold text-sm transition-colors shadow-lg shadow-turquoise/20">
+                    Comenzar ahora
+                </a>
+                <a th:href="@{/usuario/login}" href="#"
+                   class="px-6 py-3 rounded-lg border border-slate-200 dark:border-white/10 text-navy dark:text-white font-semibold text-sm hover:border-turquoise dark:hover:border-turquoise-dark transition-colors">
+                    Ya tengo cuenta
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ SECCIÓN 2: EL FLUJO DE UN VEHÍCULO EN VIVO ============ -->
+    <section class="max-w-6xl mx-auto px-6 pb-28">
+        <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-navy-surface p-8 sm:p-10 shadow-xl shadow-navy/5 dark:shadow-none">
+
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-10">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-turquoise-hover dark:text-turquoise-dark mb-1.5">Así se mueve un vehículo por tu taller</p>
+                    <h2 class="font-display font-bold text-2xl text-navy dark:text-white">De la llave en mano a la entrega, sin perder el hilo</h2>
+                </div>
+                <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-slate-400">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-turquoise opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-turquoise"></span>
+                    </span>
+                    Estado actualizándose en tiempo real
+                </span>
+            </div>
+
+            <!-- Stepper del ciclo de vida -->
+            <div class="relative mb-12">
+                <!-- Barra de fondo (estática) -->
+                <div class="absolute left-0 right-0 top-5 h-0.5 bg-slate-100 dark:bg-white/5"></div>
+                <!-- Barra de progreso animada — se le añade id="stepper-bar" -->
+                <div id="stepper-bar" class="absolute left-0 top-5 h-0.5 bg-turquoise dark:bg-turquoise-dark" style="width: 0%;"></div>
+
+                <div class="relative grid grid-cols-5 gap-2 text-center">
+                    <!-- Paso 1: Recibido -->
+                    <div class="flex flex-col items-center">
+                        <div id="dot-0"
+                             class="stepper-dot h-10 w-10 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600">
+                            <i class="bi bi-inbox text-sm" aria-hidden="true"></i>
+                        </div>
+                        <p id="label-0" class="stepper-label mt-2.5 text-[11px] font-medium text-slate-400">Recibido</p>
+                    </div>
+                    <!-- Paso 2: Diagnóstico -->
+                    <div class="flex flex-col items-center">
+                        <div id="dot-1"
+                             class="stepper-dot h-10 w-10 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600">
+                            <i class="bi bi-search text-sm" aria-hidden="true"></i>
+                        </div>
+                        <p id="label-1" class="stepper-label mt-2.5 text-[11px] font-medium text-slate-400">Diagnóstico</p>
+                    </div>
+                    <!-- Paso 3: En reparación -->
+                    <div class="flex flex-col items-center">
+                        <div id="dot-2"
+                             class="stepper-dot h-10 w-10 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600">
+                            <i class="bi bi-tools text-sm" aria-hidden="true"></i>
+                        </div>
+                        <p id="label-2" class="stepper-label mt-2.5 text-[11px] font-medium text-slate-400">En reparación</p>
+                    </div>
+                    <!-- Paso 4: Listo para entrega -->
+                    <div class="flex flex-col items-center">
+                        <div id="dot-3"
+                             class="stepper-dot h-10 w-10 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600">
+                            <i class="bi bi-flag text-sm" aria-hidden="true"></i>
+                        </div>
+                        <p id="label-3" class="stepper-label mt-2.5 text-[11px] font-medium text-slate-400">Listo para entrega</p>
+                    </div>
+                    <!-- Paso 5: Entregado -->
+                    <div class="flex flex-col items-center">
+                        <div id="dot-4"
+                             class="stepper-dot h-10 w-10 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600">
+                            <i class="bi bi-check-lg text-sm" aria-hidden="true"></i>
+                        </div>
+                        <p id="label-4" class="stepper-label mt-2.5 text-[11px] font-medium text-slate-400">Entregado</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- La ficha del vehículo tal como la vería el taller -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-graphite p-5">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Placa</p>
+                            <p class="font-mono font-bold text-navy dark:text-white">GRS-4312</p>
+                        </div>
+                        <span id="status-badge" class="rounded-full bg-turquoise/10 dark:bg-turquoise-dark/10 px-3 py-1 text-[11px] font-semibold text-turquoise-hover dark:text-turquoise-dark">Recibido</span>
+                    </div>
+                    <p class="mt-4 font-display font-bold text-navy dark:text-white">Toyota Hilux 3.0</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Cambio de radiador y llantas</p>
+                    <div class="mt-4 flex items-center gap-2 text-xs text-slate-400">
+                        <i class="bi bi-person-circle" aria-hidden="true"></i> Luis López · Ingresó hace 2 días
+                    </div>
+                </div>
+
+                <div class="rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-graphite p-5 flex flex-col justify-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="h-9 w-9 rounded-lg bg-turquoise/10 dark:bg-turquoise-dark/10 flex items-center justify-center text-turquoise dark:text-turquoise-dark shrink-0">
+                            <i class="bi bi-box-seam" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-navy dark:text-white">Stock descontado automáticamente</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">2 llantas · 1 radiador, sin tocar una hoja de cálculo</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="h-9 w-9 rounded-lg bg-turquoise/10 dark:bg-turquoise-dark/10 flex items-center justify-center text-turquoise dark:text-turquoise-dark shrink-0">
+                            <i class="bi bi-receipt" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-navy dark:text-white">Factura lista al entregar</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">El vehículo pasa a "Entregado" solo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ SECCIÓN 3: BENEFICIOS ============ -->
+    <section class="bg-slate-50 dark:bg-navy-surface border-y border-slate-100 dark:border-white/5 py-24">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="font-display font-extrabold text-3xl text-navy dark:text-white">Diseñado para el caos del taller moderno</h2>
+                <p class="mt-4 text-slate-500 dark:text-slate-400">Automatiza lo aburrido para que puedas enfocarte en sacar los vehículos a tiempo.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-graphite p-8 rounded-2xl border border-slate-100 dark:border-white/5 shadow-sm">
+                    <div class="h-12 w-12 rounded-lg bg-turquoise/10 dark:bg-turquoise-dark/10 flex items-center justify-center mb-6">
+                        <svg class="h-6 w-6 text-turquoise dark:text-turquoise-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-navy dark:text-white mb-3">Control de Inventario</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Se acabaron las piezas perdidas. Gestiona repuestos, controla existencias mínimas y genera pedidos a proveedores automáticamente.</p>
+                </div>
+                <div class="bg-white dark:bg-graphite p-8 rounded-2xl border border-slate-100 dark:border-white/5 shadow-sm">
+                    <div class="h-12 w-12 rounded-lg bg-turquoise/10 dark:bg-turquoise-dark/10 flex items-center justify-center mb-6">
+                        <svg class="h-6 w-6 text-turquoise dark:text-turquoise-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-navy dark:text-white mb-3">Flujo de Reparación</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Visualiza en tiempo real el estado de cada vehículo. Desde el diagnóstico inicial hasta la entrega y facturación final.</p>
+                </div>
+                <div class="bg-white dark:bg-graphite p-8 rounded-2xl border border-slate-100 dark:border-white/5 shadow-sm">
+                    <div class="h-12 w-12 rounded-lg bg-turquoise/10 dark:bg-turquoise-dark/10 flex items-center justify-center mb-6">
+                        <svg class="h-6 w-6 text-turquoise dark:text-turquoise-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-navy dark:text-white mb-3">Historial de Clientes</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Mantén una base de datos impecable. Registra cada visita, vehículo asociado y envía presupuestos directamente desde la plataforma.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ SECCIÓN 4: FAQ ============ -->
+    <section class="max-w-3xl mx-auto px-6 py-24">
+        <h2 class="font-display font-extrabold text-3xl text-navy dark:text-white text-center mb-10">Preguntas Frecuentes</h2>
+
+        <div class="space-y-4">
+            <details class="group rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-graphite [&_summary::-webkit-details-marker]:hidden">
+                <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-navy dark:text-white font-semibold">
+                    Si un cliente regresa meses después, ¿puedo ver qué se le hizo a su vehículo anteriormente?
+                    <span class="relative h-5 w-5 shrink-0">
+                    <svg class="absolute inset-0 h-5 w-5 opacity-100 group-open:opacity-0 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                    <svg class="absolute inset-0 h-5 w-5 opacity-0 group-open:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
+                </span>
+                </summary>
+                <div class="px-6 pb-6 text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                    Así es. El directorio de clientes guarda un historial completo vinculado tanto al propietario como a las placas del vehículo, permitiéndote consultar reparaciones pasadas y repuestos utilizados en segundos.
+                </div>
+            </details>
+
+            <details class="group rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-graphite [&_summary::-webkit-details-marker]:hidden">
+                <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-navy dark:text-white font-semibold">
+                    ¿Cómo funciona el control de estado de avance en las reparaciones?
+                    <span class="relative h-5 w-5 shrink-0">
+                    <svg class="absolute inset-0 h-5 w-5 opacity-100 group-open:opacity-0 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                    <svg class="absolute inset-0 h-5 w-5 opacity-0 group-open:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
+                </span>
+                </summary>
+                <div class="px-6 pb-6 text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                    Cada vehículo en taller cuenta con un estatus actualizado (diagnóstico, en espera de repuestos, en proceso o finalizado). Esto te permite saber exactamente en qué etapa se encuentra cada trabajo sin tener que ir a preguntar al área de mecánicos.
+                </div>
+            </details>
+
+            <details class="group rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-graphite [&_summary::-webkit-details-marker]:hidden">
+                <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-navy dark:text-white font-semibold">
+                    ¿Qué pasa si me quedo sin stock de un repuesto?
+                    <span class="relative h-5 w-5 shrink-0">
+                    <svg class="absolute inset-0 h-5 w-5 opacity-100 group-open:opacity-0 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                    <svg class="absolute inset-0 h-5 w-5 opacity-0 group-open:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
+                </span>
+                </summary>
+                <div class="px-6 pb-6 text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                    El sistema descuenta automáticamente las piezas del inventario al asociarlas a una reparación y te facilita la gestión de pedidos a proveedores para que nunca pierdas el hilo de lo que necesitas reponer.
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="bg-slate-50 dark:bg-navy-surface border-t border-slate-200 dark:border-white/5 py-12">
+        <div class="max-w-6xl mx-auto px-6 flex justify-center">
+            <div class="flex items-center gap-2.5">
+                <img th:src="@{/img/logo-icon_1.png}" src="/img/logo-icon.png" alt="AutoGest" class="h-7 w-7 filter grayscale opacity-70">
+                <span class="font-display font-extrabold text-sm tracking-tight text-slate-500 dark:text-slate-400">AUTOGEST &copy; 2026</span>
+            </div>
+        </div>
+    </footer>
+</main>
+
+<script>
+    /* ── THEME TOGGLE ─────────────────────────────────────── */
+    const root      = document.documentElement;
+    const iconMoon  = document.getElementById('icon-moon');
+    const iconSun   = document.getElementById('icon-sun');
+    const toggleBtn = document.getElementById('theme-toggle');
+
+    function applyTheme(isDark) {
+        root.classList.toggle('dark', isDark);
+        iconMoon.classList.toggle('hidden', isDark);
+        iconSun.classList.toggle('hidden', !isDark);
+    }
+
+    const saved      = localStorage.getItem('autogest-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(saved ? saved === 'dark' : prefersDark);
+
+    toggleBtn.addEventListener('click', () => {
+        const isDark = !root.classList.contains('dark');
+        applyTheme(isDark);
+        localStorage.setItem('autogest-theme', isDark ? 'dark' : 'light');
+    });
+
+    /* ── STEPPER ANIMATION ────────────────────────────────── */
+    (function () {
+        // Cada paso: { label para el badge, % de barra al llegar aquí, pausa en ms }
+        const steps = [
+            { name: 'Recibido',          barPct: 0,   pause: 1800 },
+            { name: 'Diagnóstico',       barPct: 25,  pause: 1800 },
+            { name: 'En reparación',     barPct: 50,  pause: 2200 },
+            { name: 'Listo para entrega',barPct: 75,  pause: 1800 },
+            { name: 'Entregado',         barPct: 100, pause: 2000 },
+        ];
+
+        const bar    = document.getElementById('stepper-bar');
+        const badge  = document.getElementById('status-badge');
+        const dots   = steps.map((_, i) => document.getElementById('dot-' + i));
+        const labels = steps.map((_, i) => document.getElementById('label-' + i));
+
+        // Clases CSS para estado activo / inactivo del dot
+        const activeClasses   = [
+            'bg-turquoise', 'dark:bg-turquoise-dark',
+            'text-white', 'dark:text-navy',
+            'border-transparent'
+        ];
+        const inactiveClasses = [
+            'border-2', 'border-slate-200', 'dark:border-white/15',
+            'bg-white', 'dark:bg-graphite',
+            'text-slate-300', 'dark:text-slate-600'
+        ];
+        // El paso activo actual lleva además un ring de énfasis
+        const currentRing = ['ring-4', 'ring-turquoise/20', 'dark:ring-turquoise-dark/20'];
+
+        function setDotActive(index, isCurrent) {
+            const dot   = dots[index];
+            const label = labels[index];
+
+            // Limpia todas las clases de estado
+            dot.classList.remove(...activeClasses, ...inactiveClasses, ...currentRing);
+            label.classList.remove('text-slate-400', 'font-medium', 'font-semibold', 'text-navy', 'dark:text-white');
+
+            dot.classList.add(...activeClasses);
+            if (isCurrent) dot.classList.add(...currentRing);
+
+            label.classList.add('font-semibold', 'text-navy', 'dark:text-white');
+        }
+
+        function setDotInactive(index) {
+            const dot   = dots[index];
+            const label = labels[index];
+
+            dot.classList.remove(...activeClasses, ...currentRing);
+            label.classList.remove('font-semibold', 'text-navy', 'dark:text-white');
+
+            dot.classList.add(...inactiveClasses);
+            label.classList.add('font-medium', 'text-slate-400');
+        }
+
+        // Resetea todo al estado inicial (todos inactivos)
+        function resetAll() {
+            steps.forEach((_, i) => setDotInactive(i));
+            bar.style.transition = 'none';   // Reset instantáneo de la barra
+            bar.style.width      = '0%';
+            badge.textContent    = steps[0].name;
+        }
+
+        // Avanza al paso indicado con animación
+        function goToStep(index) {
+            const step = steps[index];
+
+            // Activa todos los dots hasta este índice
+            for (let i = 0; i < index; i++) setDotActive(i, false);
+            setDotActive(index, true);
+
+            // Anima la barra
+            bar.style.transition = 'width 0.9s cubic-bezier(0.4, 0, 0.2, 1)';
+            bar.style.width      = step.barPct + '%';
+
+            // Actualiza el badge
+            badge.textContent = step.name;
+        }
+
+        // Secuencia cíclica con promesas
+        function runCycle() {
+            let chain = Promise.resolve();
+
+            steps.forEach((step, index) => {
+                chain = chain.then(() => new Promise(resolve => {
+                    goToStep(index);
+                    setTimeout(resolve, step.pause);
+                }));
+            });
+
+            // Al terminar: pausa breve → reset → nueva vuelta
+            chain.then(() => setTimeout(() => {
+                resetAll();
+                // Pequeño delay tras el reset para que sea visible antes de reiniciar
+                setTimeout(runCycle, 600);
+            }, 1000));
+        }
+
+        // Arranca al cargar la página
+        resetAll();
+        setTimeout(runCycle, 500);
+    })();
+</script>
+
+</body>
+</html>

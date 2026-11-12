@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<aside th:fragment="sidebar(activo)" id="sidebar"
+       class="fixed inset-y-0 left-0 z-50 flex w-72 -translate-x-full flex-col bg-navy dark:bg-navy-surface px-4 py-5 text-slate-300 transition-transform duration-300 lg:translate-x-0">
+
+    <a th:href="@{/inicio}" href="#" class="mb-8 flex items-center gap-3 px-3">
+        <img th:src="@{/img/logo-icon_1.png}" src="/img/logo-icon_1.png" alt="AutoGest" class="h-9 w-9 object-contain">
+        <div>
+            <p class="font-display text-lg font-extrabold tracking-tight text-white">AUTOGEST</p>
+            <p class="text-[11px] tracking-wide text-turquoise-dark">GESTIÓN DE TALLER</p>
+        </div>
+    </a>
+
+    <nav class="flex-1 space-y-1 text-sm overflow-y-auto">
+        <p class="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Principal</p>
+        <a th:href="@{/inicio}" href="#"
+           th:classappend="${activo == 'inicio'} ? 'bg-turquoise text-navy font-semibold' : 'hover:bg-white/10 hover:text-white'"
+           class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors">
+            <i class="bi bi-speedometer2 text-base" aria-hidden="true"></i><span>Inicio</span>
+        </a>
+
+        <p class="mb-2 mt-6 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Operación</p>
+        <a th:href="@{/cliente}" href="#"
+           th:classappend="${activo == 'cliente'} ? 'bg-turquoise text-navy font-semibold' : 'hover:bg-white/10 hover:text-white'"
+           class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors">
+            <i class="bi bi-people text-base" aria-hidden="true"></i><span>Clientes</span>
+        </a>
+        <a th:href="@{/vehiculo}" href="#"
+           th:classappend="${activo == 'vehiculo'} ? 'bg-turquoise text-navy font-semibold' : 'hover:bg-white/10 hover:text-white'"
+           class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors">
+            <i class="bi bi-car-front text-base" aria-hidden="true"></i><span>Vehículos</span>
+        </a>
+        <a th:href="@{/repuesto/catalogo}" href="#"
+           th:classappend="${activo == 'catalogo'} ? 'bg-turquoise text-navy font-semibold' : 'hover:bg-white/10 hover:text-white'"
+           class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors">
+            <i class="bi bi-search text-base" aria-hidden="true"></i><span>Catálogo de repuestos</span>
+        </a>
+        <a th:href="@{/factura}" href="#"
+           th:classappend="${activo == 'factura'} ? 'bg-turquoise text-navy font-semibold' : 'hover:bg-white/10 hover:text-white'"
+           class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors">
+            <i class="bi bi-receipt text-base" aria-hidden="true"></i><span>Facturas</span>
+        </a>
+        <a th:href="@{/factura/historial}" href="#"
+           th:classappend="${activo == 'historial'} ? 'bg-turquoise text-navy font-semibold' : 'hover:bg-white/10 hover:text-white'"
+           class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors">
+            <i class="bi bi-clock-history text-base" aria-hidden="true"></i><span>Historial de facturación</span>
+        </a>
+
+        <div th:if="${session.rolUsuario == 'ADMINISTRADOR'}">
+            <p class="mb-2 mt-6 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Administración</p>
+            <a th:href="@{/proveedor}" href="#"
+               th:classappend="${activo == 'proveedor'} ? 'bg-turquoise text-navy font-semibold' : 'hover:bg-white/10 hover:text-white'"
+               class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors">
+                <i class="bi bi-truck text-base" aria-hidden="true"></i><span>Proveedores</span>
+            </a>
+            <a th:href="@{/repuesto}" href="#"
+               th:classappend="${activo == 'repuesto'} ? 'bg-turquoise text-navy font-semibold' : 'hover:bg-white/10 hover:text-white'"
+               class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors">
+                <i class="bi bi-tools text-base" aria-hidden="true"></i><span>Inventario</span>
+            </a>
+            <a th:href="@{/lote}" href="#"
+               th:classappend="${activo == 'lote'} ? 'bg-turquoise text-navy font-semibold' : 'hover:bg-white/10 hover:text-white'"
+               class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors">
+                <i class="bi bi-box-seam text-base" aria-hidden="true"></i><span>Pedidos de lote</span>
+            </a>
+            <a th:href="@{/reporte}" href="#"
+               th:classappend="${activo == 'reporte'} ? 'bg-turquoise text-navy font-semibold' : 'hover:bg-white/10 hover:text-white'"
+               class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors">
+                <i class="bi bi-bar-chart text-base" aria-hidden="true"></i><span>Reportes</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="mt-5 border-t border-white/10 pt-4" th:with="nombre=${session.nombreUsuario} ?: 'Usuario', rol=${session.rolUsuario} ?: 'VENDEDOR'">
+        <a th:href="@{/usuario/perfil}" href="#"
+           th:classappend="${activo == 'perfil'} ? 'bg-white/10' : 'hover:bg-white/10'"
+           class="mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors">
+            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-turquoise font-bold text-navy shrink-0" th:text="${#strings.toUpperCase(#strings.substring(nombre,0,1))}">U</div>
+            <div class="min-w-0">
+                <p class="truncate text-sm font-semibold text-white" th:text="${nombre}">Usuario</p>
+                <p class="text-xs text-turquoise-dark" th:text="${rol}">VENDEDOR</p>
+            </div>
+        </a>
+        <a th:href="@{/usuario/logout}" href="#" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-red-500/15 hover:text-red-300 transition-colors">
+            <i class="bi bi-box-arrow-right text-base" aria-hidden="true"></i><span>Cerrar sesión</span>
+        </a>
+    </div>
+</aside>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi perfil - AutoGest</title>
+    <link rel="icon" type="image/png" th:href="@{/img/logo-icon_1.png}" href="/img/logo-icon_1.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        turquoise: { DEFAULT: '#14B8B3', hover: '#0E9490', dark: '#2DD4CF', darkhover: '#22B8B3' },
+                        navy: { DEFAULT: '#0B2545', surface: '#1B2333' },
+                        graphite: '#14181D'
+                    },
+                    fontFamily: { display: ['Manrope', 'sans-serif'], sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-700 dark:bg-graphite dark:text-slate-200 font-sans">
+
+<div id="overlay" class="fixed inset-0 z-40 hidden bg-navy/40 lg:hidden"></div>
+
+<div th:replace="~{fragments/sidebar :: sidebar('perfil')}"></div>
+
+<main class="min-h-screen lg:ml-72">
+    <header class="flex h-20 items-center justify-between border-b border-slate-200 bg-white px-5 dark:border-white/5 dark:bg-graphite sm:px-8">
+        <div class="flex items-center gap-3">
+            <button id="menu-button" class="rounded-lg p-2 text-navy hover:bg-slate-100 dark:text-white dark:hover:bg-white/10 lg:hidden" aria-label="Abrir menú"><i class="bi bi-list text-xl" aria-hidden="true"></i></button>
+            <h1 class="font-display text-xl font-bold text-navy dark:text-white">Mi perfil</h1>
+        </div>
+        <button id="theme-toggle" aria-label="Cambiar tema" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-navy hover:border-turquoise dark:border-white/10 dark:text-white transition-colors">
+            <i id="icon-moon" class="bi bi-moon text-sm" aria-hidden="true"></i>
+            <i id="icon-sun" class="bi bi-sun text-sm hidden" aria-hidden="true"></i>
+        </button>
+        <button onclick="history.back()" class="flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-navy transition-colors hover:border-turquoise hover:text-turquoise dark:border-white/10 dark:text-white dark:hover:border-turquoise-dark dark:hover:text-turquoise-dark">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver
+        </button>
+    </header>
+
+    <section class="mx-auto max-w-4xl px-5 py-8 sm:px-8">
+
+        <!-- ============ FICHA DEL USUARIO ============ -->
+        <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div class="rounded-xl border border-slate-200 bg-white p-5 dark:border-white/5 dark:bg-navy-surface sm:col-span-3">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-turquoise/15 text-xl font-bold text-turquoise-hover dark:text-turquoise-dark"
+                             th:text="${#strings.toUpperCase(#strings.substring(usuario.nombre,0,1))}">A</div>
+                        <div>
+                            <p class="font-display text-lg font-bold text-navy dark:text-white" th:text="${usuario.nombre}">Armando</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400" th:text="'@' + ${usuario.usuario}">@armando</p>
+                        </div>
+                    </div>
+                    <span class="w-fit rounded-full bg-turquoise px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white dark:text-navy" th:text="${usuario.rol}">ADMINISTRADOR</span>
+                </div>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 bg-white p-5 dark:border-white/5 dark:bg-navy-surface">
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Ventas realizadas</p>
+                <p class="mt-2 font-display text-2xl font-extrabold text-navy dark:text-white" th:text="${totalVentas}">0</p>
+            </div>
+            <div class="rounded-xl border border-slate-200 bg-white p-5 dark:border-white/5 dark:bg-navy-surface sm:col-span-2">
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Dinero generado en ventas</p>
+                <p class="mt-2 font-display text-2xl font-extrabold text-navy dark:text-white" th:text="'L. ' + ${#numbers.formatDecimal(totalGenerado, 1, 'COMMA', 2, 'POINT')}">L. 0.00</p>
+            </div>
+        </div>
+
+        <!-- ============ VENTAS DEL USUARIO ============ -->
+        <div class="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-white/5 dark:bg-navy-surface">
+            <div class="border-b border-slate-100 px-6 py-4 dark:border-white/5">
+                <p class="font-display font-bold text-navy dark:text-white">Mis ventas</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="border-b border-slate-100 dark:border-white/5">
+                    <tr class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                        <th class="px-6 py-3">Cliente</th>
+                        <th class="px-6 py-3">Vehículo</th>
+                        <th class="px-6 py-3">Reparación</th>
+                        <th class="px-6 py-3">Fecha</th>
+                        <th class="px-6 py-3 text-right">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-white/5">
+                    <tr th:each="v : ${ventas}" th:attr="data-href=@{/factura/{id}(id=${v.id})}" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5">
+                        <td class="px-6 py-3.5 font-medium text-navy dark:text-white" th:text="${v.cliente_nombre}">Juan Pérez</td>
+                        <td class="px-6 py-3.5 font-mono text-slate-600 dark:text-slate-300" th:text="${v.placa}">ABC-1234</td>
+                        <td class="px-6 py-3.5 text-slate-600 dark:text-slate-300" th:text="${v.tipo_reparacion}">Cambio de batería</td>
+                        <td class="px-6 py-3.5 text-slate-500 dark:text-slate-400" th:text="${v.fecha}">2026-07-20</td>
+                        <td class="px-6 py-3.5 text-right font-mono font-semibold text-navy dark:text-white" th:text="'L. ' + ${#numbers.formatDecimal(v.monto_total, 1, 'COMMA', 2, 'POINT')}">L. 2,100.00</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:if="${ventas == null or ventas.empty}" class="px-6 py-16 text-center">
+                <i class="bi bi-receipt text-3xl text-slate-300 dark:text-slate-600" aria-hidden="true"></i>
+                <p class="mt-3 font-medium text-navy dark:text-white">Todavía no has generado ninguna venta.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const root = document.documentElement;
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuButton = document.getElementById('menu-button');
+    function toggleMenu() { sidebar.classList.toggle('-translate-x-full'); overlay.classList.toggle('hidden'); }
+    menuButton?.addEventListener('click', toggleMenu);
+    overlay?.addEventListener('click', toggleMenu);
+
+    const iconMoon = document.getElementById('icon-moon');
+    const iconSun = document.getElementById('icon-sun');
+    function applyTheme(isDark) {
+        root.classList.toggle('dark', isDark);
+        iconMoon.classList.toggle('hidden', isDark);
+        iconSun.classList.toggle('hidden', !isDark);
+    }
+    const savedTheme = localStorage.getItem('autogest-theme');
+    applyTheme(savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        const isDark = !root.classList.contains('dark');
+        applyTheme(isDark);
+        localStorage.setItem('autogest-theme', isDark ? 'dark' : 'light');
+    });
+
+    document.querySelectorAll('tr[data-href]').forEach(fila => {
+        fila.addEventListener('click', () => window.location.href = fila.dataset.href);
+    });
+</script>
+</body>
+</html>

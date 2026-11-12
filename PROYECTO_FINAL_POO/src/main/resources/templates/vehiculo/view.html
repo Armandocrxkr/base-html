@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del vehículo - AutoGest</title>
+    <link rel="icon" type="image/png" th:href="@{/img/logo-icon_1.png}" href="/img/logo-icon_1.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        turquoise: { DEFAULT: '#14B8B3', hover: '#0E9490', dark: '#2DD4CF', darkhover: '#22B8B3' },
+                        navy: { DEFAULT: '#0B2545', surface: '#1B2333' },
+                        graphite: '#14181D'
+                    },
+                    fontFamily: { display: ['Manrope', 'sans-serif'], sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-700 dark:bg-graphite dark:text-slate-200 font-sans">
+
+<div id="overlay" class="fixed inset-0 z-40 hidden bg-navy/40 lg:hidden"></div>
+
+<div th:replace="~{fragments/sidebar :: sidebar('vehiculo')}"></div>
+
+<main class="min-h-screen lg:ml-72">
+    <header class="flex h-20 items-center justify-between border-b border-slate-200 bg-white px-5 dark:border-white/5 dark:bg-graphite sm:px-8">
+        <div class="flex items-center gap-3">
+            <button id="menu-button" class="rounded-lg p-2 text-navy hover:bg-slate-100 dark:text-white dark:hover:bg-white/10 lg:hidden" aria-label="Abrir menú"><i class="bi bi-list text-xl" aria-hidden="true"></i></button>
+            <div>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                    <a th:href="@{/vehiculo}" href="#" class="hover:text-turquoise dark:hover:text-turquoise-dark">Vehículos</a> / Detalle
+                </p>
+                <h1 class="font-display text-xl font-bold text-navy dark:text-white" th:text="${vehiculo.marca} + ' ' + ${vehiculo.modelo}">Toyota Corolla</h1>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button id="theme-toggle" aria-label="Cambiar tema" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-navy hover:border-turquoise dark:border-white/10 dark:text-white transition-colors">
+                <i id="icon-moon" class="bi bi-moon text-sm" aria-hidden="true"></i>
+                <i id="icon-sun" class="bi bi-sun text-sm hidden" aria-hidden="true"></i>
+            </button>
+            <button onclick="history.back()" class="flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-navy transition-colors hover:border-turquoise hover:text-turquoise dark:border-white/10 dark:text-white dark:hover:border-turquoise-dark dark:hover:text-turquoise-dark">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver
+            </button>
+            <a th:href="@{/vehiculo/editar/{id}(id=${vehiculo.id})}" href="#" class="flex items-center gap-2 rounded-lg bg-turquoise px-4 py-2 text-sm font-semibold text-white dark:text-navy transition-colors hover:bg-turquoise-hover">
+                <i class="bi bi-pencil" aria-hidden="true"></i> Editar
+            </a>
+        </div>
+    </header>
+
+    <section class="mx-auto max-w-4xl px-5 py-8 sm:px-8">
+
+        <div th:if="${exito}" class="mb-5 rounded-lg border border-turquoise/20 bg-turquoise/10 px-4 py-3 text-sm text-turquoise-hover dark:text-turquoise-dark" th:text="${exito}">
+            Éxito
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+            <!-- ============ FICHA PRINCIPAL ============ -->
+            <div class="lg:col-span-2 rounded-xl border border-slate-200 bg-white dark:border-white/5 dark:bg-navy-surface">
+                <div class="flex items-center justify-between border-b border-slate-100 px-6 py-5 dark:border-white/5">
+                    <h2 class="font-display font-bold text-navy dark:text-white">Datos del vehículo</h2>
+                    <span th:switch="${vehiculo.estado}">
+                        <span th:case="'RECIBIDO'" class="rounded-full border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-500 dark:border-white/20 dark:text-slate-300">Recibido</span>
+                        <span th:case="'EN_DIAGNOSTICO'" class="rounded-full border border-turquoise px-3 py-1 text-xs font-semibold text-turquoise-hover dark:border-turquoise-dark dark:text-turquoise-dark">En diagnóstico</span>
+                        <span th:case="'EN_REPARACION'" class="rounded-full bg-turquoise px-3 py-1 text-xs font-semibold text-white dark:text-navy">En reparación</span>
+                        <span th:case="'LISTO_PARA_ENTREGA'" class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-500/15 dark:text-amber-400">Listo para entrega</span>
+                        <span th:case="'ENTREGADO'" class="rounded-full bg-navy px-3 py-1 text-xs font-semibold text-white dark:bg-white/10"><i class="bi bi-check-lg"></i> Entregado</span>
+                        <span th:case="*" th:text="${vehiculo.estado}" class="rounded-full border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-500">Estado</span>
+                    </span>
+                </div>
+
+                <dl class="grid grid-cols-2 gap-x-4 gap-y-5 px-6 py-6 sm:grid-cols-3">
+                    <div>
+                        <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">Placa</dt>
+                        <dd class="mt-1 font-mono text-base font-semibold text-navy dark:text-white" th:text="${vehiculo.placa}">ABC-1234</dd>
+                    </div>
+                    <div>
+                        <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">Marca</dt>
+                        <dd class="mt-1 text-base text-navy dark:text-white" th:text="${vehiculo.marca}">Toyota</dd>
+                    </div>
+                    <div>
+                        <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">Modelo</dt>
+                        <dd class="mt-1 text-base text-navy dark:text-white" th:text="${vehiculo.modelo}">Corolla</dd>
+                    </div>
+                    <div>
+                        <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">Año</dt>
+                        <dd class="mt-1 text-base text-navy dark:text-white" th:text="${vehiculo.anio}">2015</dd>
+                    </div>
+                    <div>
+                        <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">Color</dt>
+                        <dd class="mt-1 text-base text-navy dark:text-white" th:text="${vehiculo.color}">Blanco</dd>
+                    </div>
+                    <div>
+                        <dt class="text-xs font-medium uppercase tracking-wide text-slate-400">Fecha de ingreso</dt>
+                        <dd class="mt-1 text-base text-navy dark:text-white" th:text="${vehiculo.fechaIngreso}">2026-07-20</dd>
+                    </div>
+                </dl>
+            </div>
+
+            <!-- ============ CLIENTE + ACCIONES ============ -->
+            <div class="flex flex-col gap-6">
+                <div class="rounded-xl border border-slate-200 bg-white p-6 dark:border-white/5 dark:bg-navy-surface">
+                    <h3 class="font-display font-bold text-navy dark:text-white">Estado del vehículo</h3>
+
+                    <form th:if="${vehiculo.estado == 'RECIBIDO'}" th:action="@{/vehiculo/{id}/estado(id=${vehiculo.id})}" method="post" class="mt-4">
+                        <input type="hidden" name="nuevoEstado" value="EN_DIAGNOSTICO">
+                        <button type="submit" class="flex w-full items-center justify-between rounded-lg bg-turquoise px-4 py-2.5 text-sm font-semibold text-white dark:text-navy transition-colors hover:bg-turquoise-hover">
+                            <span>Marcar en diagnóstico</span><i class="bi bi-arrow-right-circle" aria-hidden="true"></i>
+                        </button>
+                    </form>
+
+                    <form th:if="${vehiculo.estado == 'EN_DIAGNOSTICO'}" th:action="@{/vehiculo/{id}/estado(id=${vehiculo.id})}" method="post" class="mt-4">
+                        <input type="hidden" name="nuevoEstado" value="EN_REPARACION">
+                        <button type="submit" class="flex w-full items-center justify-between rounded-lg bg-turquoise px-4 py-2.5 text-sm font-semibold text-white dark:text-navy transition-colors hover:bg-turquoise-hover">
+                            <span>Marcar en reparación</span><i class="bi bi-arrow-right-circle" aria-hidden="true"></i>
+                        </button>
+                    </form>
+
+                    <form th:if="${vehiculo.estado == 'EN_REPARACION'}" th:action="@{/vehiculo/{id}/estado(id=${vehiculo.id})}" method="post" class="mt-4">
+                        <input type="hidden" name="nuevoEstado" value="LISTO_PARA_ENTREGA">
+                        <button type="submit" class="flex w-full items-center justify-between rounded-lg bg-turquoise px-4 py-2.5 text-sm font-semibold text-white dark:text-navy transition-colors hover:bg-turquoise-hover">
+                            <span>Marcar listo para entrega</span><i class="bi bi-arrow-right-circle" aria-hidden="true"></i>
+                        </button>
+                    </form>
+
+                    <a th:if="${vehiculo.estado == 'LISTO_PARA_ENTREGA'}" th:href="@{/factura/nueva(idVehiculo=${vehiculo.id})}" href="#"
+                       class="mt-4 flex items-center justify-between rounded-lg bg-turquoise px-4 py-2.5 text-sm font-semibold text-white dark:text-navy transition-colors hover:bg-turquoise-hover">
+                        <span>Entregar y facturar</span><i class="bi bi-receipt" aria-hidden="true"></i>
+                    </a>
+                    <p th:if="${vehiculo.estado == 'LISTO_PARA_ENTREGA'}" class="mt-2 text-xs text-slate-400">
+                        Al generar la factura, el vehículo pasa automáticamente a "Entregado".
+                    </p>
+
+                    <p th:if="${vehiculo.estado == 'ENTREGADO'}" class="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-400">
+                        <i class="bi bi-check-circle" aria-hidden="true"></i> Este vehículo ya fue entregado y facturado. El estado no se puede volver a cambiar.
+                    </p>
+                </div>
+
+                <div class="rounded-xl border border-slate-200 bg-white p-6 dark:border-white/5 dark:bg-navy-surface">
+                    <h3 class="font-display font-bold text-navy dark:text-white">Cliente</h3>
+                    <div class="mt-4 flex items-center gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-turquoise/15 text-sm font-bold text-turquoise-hover dark:text-turquoise-dark"
+                             th:text="${#strings.toUpperCase(#strings.substring(nombreCliente,0,1))}">C</div>
+                        <p class="font-medium text-navy dark:text-white" th:text="${nombreCliente}">Nombre del cliente</p>
+                    </div>
+                </div>
+
+                <div class="rounded-xl border border-slate-200 bg-white p-6 dark:border-white/5 dark:bg-navy-surface">
+                    <h3 class="font-display font-bold text-navy dark:text-white">Acciones</h3>
+                    <div class="mt-4 flex flex-col gap-3">
+                        <a th:href="@{/vehiculo/editar/{id}(id=${vehiculo.id})}" href="#" class="flex items-center justify-between rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-medium text-navy hover:border-turquoise hover:text-turquoise dark:border-white/10 dark:text-white transition-colors">
+                            <span>Editar vehículo</span><i class="bi bi-pencil" aria-hidden="true"></i>
+                        </a>
+                        <a th:href="@{/factura/nueva(idVehiculo=${vehiculo.id})}" href="#" class="flex items-center justify-between rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-medium text-navy hover:border-turquoise hover:text-turquoise dark:border-white/10 dark:text-white transition-colors">
+                            <span>Generar factura</span><i class="bi bi-receipt" aria-hidden="true"></i>
+                        </a>
+                        <form th:action="@{/vehiculo/eliminar/{id}(id=${vehiculo.id})}" method="post"
+                              onsubmit="return confirm('¿Seguro que querés eliminar este vehículo? Esta acción no se puede deshacer.');">
+                            <button type="submit" class="flex w-full items-center justify-between rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-medium text-red-500 hover:border-red-300 hover:bg-red-50 dark:border-white/10 dark:hover:bg-red-500/10 transition-colors">
+                                <span>Eliminar vehículo</span><i class="bi bi-trash" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ HISTORIAL DE ESTADO ============ -->
+        <div class="mt-6 rounded-xl border border-slate-200 bg-white dark:border-white/5 dark:bg-navy-surface">
+            <div class="border-b border-slate-100 px-6 py-5 dark:border-white/5">
+                <h2 class="font-display font-bold text-navy dark:text-white">Historial de estado</h2>
+                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Seguimiento de los cambios de estado de este vehículo.</p>
+            </div>
+
+            <div th:if="${historial != null and !historial.empty}" class="divide-y divide-slate-100 px-6 dark:divide-white/5">
+                <div th:each="h : ${historial}" class="flex items-center gap-4 py-4">
+                    <i class="bi bi-arrow-right-circle text-turquoise dark:text-turquoise-dark" aria-hidden="true"></i>
+                    <div class="flex-1">
+                        <p class="text-sm text-navy dark:text-white">
+                            <span th:if="${h.estado_anterior != null}" th:text="${h.estado_anterior}" class="text-slate-400">Anterior</span>
+                            <span th:if="${h.estado_anterior != null}"> → </span>
+                            <span class="font-semibold" th:text="${h.estado_nuevo}">Nuevo</span>
+                        </p>
+                    </div>
+                    <p class="text-xs text-slate-400" th:text="${h.fecha_cambio}">2026-07-20 10:00</p>
+                </div>
+            </div>
+            <div th:if="${historial == null or historial.empty}" class="px-6 py-10 text-center">
+                <p class="text-sm text-slate-500 dark:text-slate-400">Todavía no hay cambios de estado registrados para este vehículo.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const root = document.documentElement;
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuButton = document.getElementById('menu-button');
+    function toggleMenu() { sidebar.classList.toggle('-translate-x-full'); overlay.classList.toggle('hidden'); }
+    menuButton?.addEventListener('click', toggleMenu);
+    overlay?.addEventListener('click', toggleMenu);
+
+    const iconMoon = document.getElementById('icon-moon');
+    const iconSun = document.getElementById('icon-sun');
+    function applyTheme(isDark) {
+        root.classList.toggle('dark', isDark);
+        iconMoon.classList.toggle('hidden', isDark);
+        iconSun.classList.toggle('hidden', !isDark);
+    }
+    const savedTheme = localStorage.getItem('autogest-theme');
+    applyTheme(savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        const isDark = !root.classList.contains('dark');
+        applyTheme(isDark);
+        localStorage.setItem('autogest-theme', isDark ? 'dark' : 'light');
+    });
+</script>
+</body>
+</html>

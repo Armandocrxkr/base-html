@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehículos - AutoGest</title>
+    <link rel="icon" type="image/png" th:href="@{/img/logo-icon_1.png}" href="/img/logo-icon_1.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        turquoise: { DEFAULT: '#14B8B3', hover: '#0E9490', dark: '#2DD4CF', darkhover: '#22B8B3' },
+                        navy: { DEFAULT: '#0B2545', surface: '#1B2333' },
+                        graphite: '#14181D'
+                    },
+                    fontFamily: { display: ['Manrope', 'sans-serif'], sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-700 dark:bg-graphite dark:text-slate-200 font-sans">
+
+<div id="overlay" class="fixed inset-0 z-40 hidden bg-navy/40 lg:hidden"></div>
+
+<div th:replace="~{fragments/sidebar :: sidebar('vehiculo')}"></div>
+
+<main class="min-h-screen lg:ml-72">
+    <header class="flex h-20 items-center justify-between border-b border-slate-200 bg-white px-5 dark:border-white/5 dark:bg-graphite sm:px-8">
+        <div class="flex items-center gap-3">
+            <button id="menu-button" class="rounded-lg p-2 text-navy hover:bg-slate-100 dark:text-white dark:hover:bg-white/10 lg:hidden" aria-label="Abrir menú"><i class="bi bi-list text-xl" aria-hidden="true"></i></button>
+            <h1 class="font-display text-xl font-bold text-navy dark:text-white">Vehículos</h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <button id="theme-toggle" aria-label="Cambiar tema" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-navy hover:border-turquoise dark:border-white/10 dark:text-white transition-colors">
+                <i id="icon-moon" class="bi bi-moon text-sm" aria-hidden="true"></i>
+                <i id="icon-sun" class="bi bi-sun text-sm hidden" aria-hidden="true"></i>
+            </button>
+            <a th:href="@{/vehiculo/nuevo}" href="#" class="flex items-center gap-2 rounded-lg bg-turquoise px-4 py-2 text-sm font-semibold text-white dark:text-navy transition-colors hover:bg-turquoise-hover">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo vehículo
+            </a>
+        </div>
+    </header>
+
+    <section class="mx-auto max-w-7xl px-5 py-8 sm:px-8">
+
+        <!-- ============ FILTROS ============ -->
+        <form th:action="@{/vehiculo}" method="get" class="mb-6 grid grid-cols-1 gap-3 rounded-xl border border-slate-200 bg-white p-4 dark:border-white/5 dark:bg-navy-surface sm:grid-cols-4">
+            <div class="sm:col-span-2">
+                <label for="placa" class="mb-1 block text-xs font-medium text-slate-500 dark:text-slate-400">Placa</label>
+                <div class="relative">
+                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" aria-hidden="true"></i>
+                    <input type="text" id="placa" name="placa" th:value="${param.placa}" placeholder="Buscar por placa..."
+                           class="h-10 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 font-mono text-sm text-navy focus:border-transparent focus:outline-none focus:ring-2 focus:ring-turquoise dark:border-white/10 dark:bg-graphite dark:text-white">
+                </div>
+            </div>
+            <div>
+                <label for="marca" class="mb-1 block text-xs font-medium text-slate-500 dark:text-slate-400">Marca</label>
+                <div class="relative">
+                    <select id="marca" name="marca"
+                            class="h-10 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-9 text-sm text-navy transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-turquoise dark:border-white/10 dark:bg-graphite dark:text-white">
+                        <option value="">Todas las marcas</option>
+                        <option th:each="m : ${marcas}" th:value="${m}" th:text="${m}"
+                                th:selected="${param.marca != null and param.marca[0] == m}">Marca</option>
+                    </select>
+                    <i class="bi bi-chevron-down pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div>
+                <label for="modelo" class="mb-1 block text-xs font-medium text-slate-500 dark:text-slate-400">Modelo</label>
+                <div class="relative">
+                    <select id="modelo" name="modelo"
+                            class="h-10 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-9 text-sm text-navy transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-turquoise disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 dark:border-white/10 dark:bg-graphite dark:text-white dark:disabled:bg-white/5">
+                        <option value="">Seleccioná una marca primero</option>
+                    </select>
+                    <i class="bi bi-chevron-down pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div class="sm:col-span-4 flex items-center gap-3">
+                <button type="submit" class="flex items-center gap-2 rounded-lg bg-navy dark:bg-turquoise px-4 py-2 text-sm font-semibold text-white dark:text-navy transition-colors hover:opacity-90">
+                    <i class="bi bi-funnel" aria-hidden="true"></i> Filtrar
+                </button>
+                <a th:href="@{/vehiculo}" href="#" class="text-sm font-medium text-slate-500 hover:text-turquoise dark:text-slate-400 dark:hover:text-turquoise-dark">Limpiar filtros</a>
+            </div>
+        </form>
+
+        <!-- Datos para el combobox de modelo en cascada, generados desde ${marcaModelo} -->
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const marcaModeloData = /*[[${marcaModelo}]]*/ [];
+            const modeloSeleccionadoInicial = /*[[${param.modelo != null ? param.modelo[0] : ''}]]*/ '';
+            /*]]>*/
+        </script>
+
+        <!-- ============ TABLA ============ -->
+        <div class="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-white/5 dark:bg-navy-surface">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="border-b border-slate-100 dark:border-white/5">
+                    <tr class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                        <th class="px-6 py-3">Placa</th>
+                        <th class="px-6 py-3">Vehículo</th>
+                        <th class="px-6 py-3">Año</th>
+                        <th class="px-6 py-3">Estado</th>
+                        <th class="px-6 py-3 text-right">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-white/5">
+                    <tr th:each="vehiculo : ${vehiculos}" class="hover:bg-slate-50 dark:hover:bg-white/5">
+                        <td class="px-6 py-3.5 font-mono text-navy dark:text-white" th:text="${vehiculo.placa}">PBH-1234</td>
+                        <td class="px-6 py-3.5">
+                            <p class="font-medium text-navy dark:text-white">
+                                <span th:text="${vehiculo.marca}">Toyota</span> <span th:text="${vehiculo.modelo}">Corolla</span>
+                            </p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400" th:text="${vehiculo.color}">Blanco</p>
+                        </td>
+                        <td class="px-6 py-3.5 text-slate-600 dark:text-slate-300" th:text="${vehiculo.anio}">2015</td>
+                        <td class="px-6 py-3.5">
+                                <span th:switch="${vehiculo.estado}" class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold">
+                                    <span th:case="'RECIBIDO'" class="rounded-full border border-slate-300 px-3 py-1 text-slate-500 dark:border-white/20 dark:text-slate-300">Recibido</span>
+                                    <span th:case="'EN_DIAGNOSTICO'" class="rounded-full border border-turquoise px-3 py-1 text-turquoise-hover dark:border-turquoise-dark dark:text-turquoise-dark">En diagnóstico</span>
+                                    <span th:case="'EN_REPARACION'" class="rounded-full bg-turquoise px-3 py-1 text-white dark:text-navy">En reparación</span>
+                                    <span th:case="'LISTO_PARA_ENTREGA'" class="rounded-full bg-amber-100 px-3 py-1 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400">Listo para entrega</span>
+                                    <span th:case="'ENTREGADO'" class="rounded-full bg-navy px-3 py-1 text-white dark:bg-white/10"><i class="bi bi-check-lg"></i> Entregado</span>
+                                    <span th:case="*" th:text="${vehiculo.estado}" class="rounded-full border border-slate-300 px-3 py-1 text-slate-500">Estado</span>
+                                </span>
+                        </td>
+                        <td class="px-6 py-3.5">
+                            <div class="flex items-center justify-end gap-1">
+                                <a th:href="@{/vehiculo/{id}(id=${vehiculo.id})}" href="#" title="Ver detalle"
+                                   class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-navy dark:hover:bg-white/10 dark:hover:text-white">
+                                    <i class="bi bi-eye" aria-hidden="true"></i>
+                                </a>
+                                <a th:href="@{/vehiculo/editar/{id}(id=${vehiculo.id})}" href="#" title="Editar"
+                                   class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-turquoise-hover dark:hover:bg-white/10 dark:hover:text-turquoise-dark">
+                                    <i class="bi bi-pencil" aria-hidden="true"></i>
+                                </a>
+                                <form th:action="@{/vehiculo/eliminar/{id}(id=${vehiculo.id})}" method="post"
+                                      onsubmit="return confirm('¿Seguro que querés eliminar este vehículo? Esta acción no se puede deshacer.');">
+                                    <button type="submit" title="Eliminar"
+                                            class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-500/10 dark:hover:text-red-400">
+                                        <i class="bi bi-trash" aria-hidden="true"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:if="${vehiculos == null or vehiculos.empty}" class="px-6 py-16 text-center">
+                <i class="bi bi-car-front text-3xl text-slate-300 dark:text-slate-600" aria-hidden="true"></i>
+                <p class="mt-3 font-medium text-navy dark:text-white">No se encontraron vehículos.</p>
+                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Probá ajustando los filtros, o registrá el primero.</p>
+                <a th:href="@{/vehiculo/nuevo}" href="#" class="mt-4 inline-block text-sm font-semibold text-turquoise dark:text-turquoise-dark hover:underline">Registrar vehículo →</a>
+            </div>
+
+            <!-- ============ PAGINACIÓN ============ -->
+            <div th:if="${vehiculos != null and !vehiculos.empty and totalPaginas > 1}"
+                 class="flex items-center justify-center gap-1.5 border-t border-slate-100 px-6 py-4 dark:border-white/5">
+
+                <a th:if="${paginaActual > 1}"
+                   th:href="@{/vehiculo(pagina=${paginaActual - 1}, placa=${param.placa}, marca=${param.marca}, modelo=${param.modelo})}"
+                   href="#"
+                   class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/10 transition-colors">
+                    <i class="bi bi-chevron-left text-sm" aria-hidden="true"></i>
+                </a>
+
+                <a th:each="p : ${#numbers.sequence(1, totalPaginas)}"
+                   th:href="@{/vehiculo(pagina=${p}, placa=${param.placa}, marca=${param.marca}, modelo=${param.modelo})}"
+                   href="#"
+                   th:text="${p}"
+                   th:classappend="${p == paginaActual} ? 'bg-turquoise text-white dark:text-navy font-semibold' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10'"
+                   class="flex h-8 min-w-8 items-center justify-center rounded-lg px-2 text-sm transition-colors">1</a>
+
+                <a th:if="${paginaActual < totalPaginas}"
+                   th:href="@{/vehiculo(pagina=${paginaActual + 1}, placa=${param.placa}, marca=${param.marca}, modelo=${param.modelo})}"
+                   href="#"
+                   class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/10 transition-colors">
+                    <i class="bi bi-chevron-right text-sm" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</main>
+
+<script>
+    const root = document.documentElement;
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuButton = document.getElementById('menu-button');
+    function toggleMenu() { sidebar.classList.toggle('-translate-x-full'); overlay.classList.toggle('hidden'); }
+    menuButton?.addEventListener('click', toggleMenu);
+    overlay?.addEventListener('click', toggleMenu);
+
+    const iconMoon = document.getElementById('icon-moon');
+    const iconSun = document.getElementById('icon-sun');
+    function applyTheme(isDark) {
+        root.classList.toggle('dark', isDark);
+        iconMoon.classList.toggle('hidden', isDark);
+        iconSun.classList.toggle('hidden', !isDark);
+    }
+    const savedTheme = localStorage.getItem('autogest-theme');
+    applyTheme(savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        const isDark = !root.classList.contains('dark');
+        applyTheme(isDark);
+        localStorage.setItem('autogest-theme', isDark ? 'dark' : 'light');
+    });
+
+    // ============ Combobox de modelo en cascada ============
+    const selectMarca = document.getElementById('marca');
+    const selectModelo = document.getElementById('modelo');
+
+    function poblarModelos(marcaElegida, modeloAMantener) {
+        selectModelo.innerHTML = '';
+
+        if (!marcaElegida) {
+            selectModelo.disabled = true;
+            const opcion = document.createElement('option');
+            opcion.value = '';
+            opcion.textContent = 'Seleccioná una marca primero';
+            selectModelo.appendChild(opcion);
+            return;
+        }
+
+        selectModelo.disabled = false;
+
+        const opcionTodos = document.createElement('option');
+        opcionTodos.value = '';
+        opcionTodos.textContent = 'Todos los modelos';
+        selectModelo.appendChild(opcionTodos);
+
+        const modelosDeMarca = [...new Set(
+            marcaModeloData.filter(mm => mm.marca === marcaElegida).map(mm => mm.modelo)
+        )];
+
+        modelosDeMarca.forEach(modelo => {
+            const opcion = document.createElement('option');
+            opcion.value = modelo;
+            opcion.textContent = modelo;
+            if (modelo === modeloAMantener) opcion.selected = true;
+            selectModelo.appendChild(opcion);
+        });
+    }
+
+    selectMarca.addEventListener('change', () => poblarModelos(selectMarca.value, ''));
+
+    // Al cargar la página, si ya venía una marca filtrada (por ejemplo al recargar tras filtrar), reconstruimos el modelo
+    poblarModelos(selectMarca.value, modeloSeleccionadoInicial);
+</script>
+</body>
+</html>
