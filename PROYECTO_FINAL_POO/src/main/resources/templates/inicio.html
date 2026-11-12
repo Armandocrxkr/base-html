@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio del taller - AutoGest</title>
+    <title>Flujo del taller - AutoGest</title>
     <link rel="icon" type="image/png" th:href="@{/img/logo-icon_1.png}" href="/img/logo-icon_1.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,174 +26,183 @@
         }
     </script>
 </head>
-<body class="bg-[#F5F7FA] font-sans text-slate-700 antialiased dark:bg-graphite dark:text-slate-200"
+<body class="bg-[#F3F5F7] font-sans text-slate-700 antialiased dark:bg-graphite dark:text-slate-200"
       th:with="nombre=${session.nombreUsuario} ?: 'Usuario', rol=${session.rolUsuario} ?: 'VENDEDOR'">
 
 <div id="overlay" class="fixed inset-0 z-40 hidden bg-navy/40 lg:hidden"></div>
 <div th:replace="~{fragments/sidebar :: sidebar('inicio')}"></div>
 
 <main class="min-h-screen lg:ml-72">
-    <header class="sticky top-0 z-30 flex h-[72px] items-center justify-between border-b border-slate-200/80 bg-white/95 px-5 backdrop-blur dark:border-white/[0.07] dark:bg-graphite/95 sm:px-8">
-        <button id="menu-button" class="rounded-lg p-2 text-navy transition hover:bg-slate-100 dark:text-white dark:hover:bg-white/10 lg:hidden" aria-label="Abrir menú">
-            <i class="bi bi-list text-xl" aria-hidden="true"></i>
-        </button>
-        <div class="hidden lg:block">
-            <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">AutoGest <span class="px-1.5 text-slate-300 dark:text-slate-600">/</span> Operación</p>
-            <h1 class="mt-0.5 font-display text-base font-bold text-navy dark:text-white">Inicio del taller</h1>
+    <header class="flex h-[68px] items-center justify-between border-b border-slate-200 bg-white px-5 dark:border-white/[0.07] dark:bg-graphite sm:px-8">
+        <button id="menu-button" class="rounded-lg p-2 text-navy hover:bg-slate-100 dark:text-white dark:hover:bg-white/10 lg:hidden" aria-label="Abrir menú"><i class="bi bi-list text-xl" aria-hidden="true"></i></button>
+        <div class="hidden lg:flex items-center gap-2 text-xs font-medium text-slate-400 dark:text-slate-500">
+            <span>AutoGest</span><i class="bi bi-chevron-right text-[9px]" aria-hidden="true"></i><span class="text-slate-600 dark:text-slate-300">Operación del taller</span>
         </div>
         <div class="flex items-center gap-2.5">
-            <button id="theme-toggle" aria-label="Cambiar tema" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-navy transition hover:border-turquoise hover:text-turquoise-hover dark:border-white/10 dark:text-white dark:hover:text-turquoise-dark">
-                <i id="icon-moon" class="bi bi-moon text-sm" aria-hidden="true"></i>
-                <i id="icon-sun" class="bi bi-sun text-sm hidden" aria-hidden="true"></i>
+            <button id="theme-toggle" aria-label="Cambiar tema" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-navy transition hover:border-turquoise dark:border-white/10 dark:text-white">
+                <i id="icon-moon" class="bi bi-moon text-sm" aria-hidden="true"></i><i id="icon-sun" class="bi bi-sun hidden text-sm" aria-hidden="true"></i>
             </button>
-            <a th:href="@{/vehiculo/nuevo}" href="#" class="inline-flex items-center gap-2 rounded-lg bg-turquoise px-3.5 py-2.5 text-sm font-semibold text-navy shadow-sm shadow-turquoise/20 transition hover:bg-turquoise-hover hover:text-white sm:px-4">
-                <i class="bi bi-plus-lg" aria-hidden="true"></i><span>Registrar vehículo</span>
+            <a th:href="@{/vehiculo/nuevo}" href="#" class="inline-flex items-center gap-2 rounded-lg bg-turquoise px-3.5 py-2.5 text-sm font-semibold text-navy transition hover:bg-turquoise-hover hover:text-white sm:px-4">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i><span class="hidden sm:inline">Recibir vehículo</span><span class="sm:hidden">Nuevo vehículo</span>
             </a>
         </div>
     </header>
 
-    <section class="mx-auto max-w-[1440px] px-5 py-7 sm:px-8 sm:py-9">
-        <!-- Bienvenida y contexto del día -->
-        <div class="flex flex-col justify-between gap-5 border-b border-slate-200 pb-6 dark:border-white/10 sm:flex-row sm:items-end">
-            <div>
-                <p id="saludo-hora" class="text-sm font-medium text-slate-500 dark:text-slate-400">Hola,</p>
-                <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                    <h2 class="font-display text-[28px] font-extrabold leading-tight tracking-tight text-navy dark:text-white" th:text="${nombre}">Armando</h2>
-                    <span class="rounded-full bg-turquoise/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-turquoise-hover dark:bg-turquoise-dark/10 dark:text-turquoise-dark" th:text="${rol}">ADMINISTRADOR</span>
+    <section class="mx-auto max-w-[1500px] px-5 py-6 sm:px-8 sm:py-8">
+        <!-- Hero de marca: imagen protagonista y texto legible en ambos temas -->
+        <div class="group relative isolate flex min-h-[310px] overflow-hidden rounded-[26px] bg-navy shadow-xl shadow-navy/10 dark:shadow-black/20 sm:min-h-[365px] lg:min-h-[410px]">
+            <img src="https://images.unsplash.com/photo-1646807284302-170c9505b2e7?auto=format&amp;fit=crop&amp;fm=jpg&amp;q=85&amp;w=2200"
+                 alt="Mecánico trabajando en un vehículo dentro de un taller" class="absolute inset-0 -z-20 h-full w-full object-cover object-center transition duration-700 group-hover:scale-[1.015]" fetchpriority="high">
+            <div class="absolute inset-0 -z-10 bg-gradient-to-r from-[#071A32]/95 via-[#0B2545]/75 to-[#0B2545]/10 dark:from-[#07111F]/95 dark:via-[#0B1B2E]/80 dark:to-[#0B1B2E]/20"></div>
+            <div class="absolute inset-x-0 bottom-0 -z-10 h-32 bg-gradient-to-t from-[#071A32]/50 to-transparent"></div>
+            <div class="flex w-full flex-col justify-between p-6 sm:p-9 lg:p-11">
+                <div class="flex items-center justify-between gap-3">
+                    <span class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm"><span class="h-1.5 w-1.5 rounded-full bg-turquoise-dark"></span> Vista de operaciones</span>
+                    <span class="rounded-full border border-white/20 bg-black/15 px-3 py-1.5 text-xs font-medium text-white/80 backdrop-blur-sm" id="fecha-hoy"></span>
                 </div>
-                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Este es el estado actual de tu taller.</p>
-            </div>
-            <p class="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400">
-                <i class="bi bi-calendar3 text-turquoise-hover dark:text-turquoise-dark" aria-hidden="true"></i>
-                <span id="fecha-hoy"></span>
-            </p>
-        </div>
-
-        <!-- Resumen compacto: las cifras acompañan al trabajo, no lo sustituyen -->
-        <div class="mt-5 flex flex-wrap items-center gap-x-0 gap-y-3 rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm shadow-slate-900/[0.02] dark:border-white/[0.07] dark:bg-navy-surface sm:px-5">
-            <div class="flex min-w-[46%] flex-1 items-center gap-3 border-r border-slate-100 pr-4 dark:border-white/10 sm:min-w-0 sm:pr-6">
-                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 dark:bg-white/[0.06] dark:text-slate-300"><i class="bi bi-inbox" aria-hidden="true"></i></span>
-                <div><p class="font-mono text-xl font-bold leading-none tabular-nums text-navy dark:text-white" th:text="${vehiculosRecibidos} ?: 0">0</p><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Recibidos</p></div>
-            </div>
-            <div class="flex min-w-[46%] flex-1 items-center gap-3 pl-0 sm:min-w-0 sm:px-6">
-                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600 dark:bg-amber-400/10 dark:text-amber-400"><i class="bi bi-tools" aria-hidden="true"></i></span>
-                <div><p class="font-mono text-xl font-bold leading-none tabular-nums text-navy dark:text-white" th:text="${vehiculosEnReparacion} ?: 0">0</p><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">En reparación</p></div>
-            </div>
-            <div class="flex min-w-[46%] flex-1 items-center gap-3 border-r border-slate-100 pr-4 dark:border-white/10 sm:min-w-0 sm:border-r sm:px-6">
-                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-turquoise/10 text-turquoise-hover dark:bg-turquoise-dark/10 dark:text-turquoise-dark"><i class="bi bi-check2-circle" aria-hidden="true"></i></span>
-                <div><p class="font-mono text-xl font-bold leading-none tabular-nums text-navy dark:text-white" th:text="${vehiculosListos} ?: 0">0</p><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Listos para entrega</p></div>
-            </div>
-            <a th:href="${rol == 'ADMINISTRADOR'} ? @{/repuesto} : @{/repuesto/catalogo}" href="#" class="group flex min-w-[46%] flex-1 items-center gap-3 pl-0 sm:min-w-0 sm:pl-6">
-                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-400/10 dark:text-rose-400"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i></span>
-                <div><p class="font-mono text-xl font-bold leading-none tabular-nums text-navy dark:text-white" th:text="${repuestosStockBajo} ?: 0">0</p><p class="mt-1 text-xs text-slate-500 transition group-hover:text-rose-600 dark:text-slate-400 dark:group-hover:text-rose-400">Repuestos con stock bajo <i class="bi bi-arrow-up-right text-[10px]" aria-hidden="true"></i></p></div>
-            </a>
-        </div>
-
-        <!-- Alertas que sí requieren una acción -->
-        <div th:if="${(vehiculosListos != null and vehiculosListos > 0) or (repuestosStockBajo != null and repuestosStockBajo > 0)}" class="mt-5 flex flex-col gap-2 sm:flex-row">
-            <a th:if="${vehiculosListos != null and vehiculosListos > 0}" th:href="@{/vehiculo}" href="#" class="group flex flex-1 items-center gap-3 rounded-lg border border-amber-200/80 bg-amber-50/70 px-4 py-3 transition hover:border-amber-300 dark:border-amber-400/20 dark:bg-amber-400/[0.06] dark:hover:border-amber-400/40">
-                <i class="bi bi-flag text-amber-600 dark:text-amber-400" aria-hidden="true"></i><span class="flex-1 text-sm text-amber-950 dark:text-amber-100"><strong th:text="${vehiculosListos}">0</strong> vehículo(s) listo(s) para entregar</span><i class="bi bi-arrow-right text-amber-600 transition group-hover:translate-x-0.5 dark:text-amber-400" aria-hidden="true"></i>
-            </a>
-            <a th:if="${repuestosStockBajo != null and repuestosStockBajo > 0}" th:href="${rol == 'ADMINISTRADOR'} ? @{/repuesto} : @{/repuesto/catalogo}" href="#" class="group flex flex-1 items-center gap-3 rounded-lg border border-rose-200/80 bg-rose-50/70 px-4 py-3 transition hover:border-rose-300 dark:border-rose-400/20 dark:bg-rose-400/[0.06] dark:hover:border-rose-400/40">
-                <i class="bi bi-box-seam text-rose-600 dark:text-rose-400" aria-hidden="true"></i><span class="flex-1 text-sm text-rose-950 dark:text-rose-100"><strong th:text="${repuestosStockBajo}">0</strong> repuesto(s) con stock bajo</span><i class="bi bi-arrow-right text-rose-600 transition group-hover:translate-x-0.5 dark:text-rose-400" aria-hidden="true"></i>
-            </a>
-        </div>
-
-        <!-- Trabajo activo primero; inventario y atajos en una columna de apoyo -->
-        <div class="mt-7 grid grid-cols-1 gap-5 xl:grid-cols-12 xl:gap-6">
-            <article class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm shadow-slate-900/[0.02] dark:border-white/[0.07] dark:bg-navy-surface xl:col-span-8">
-                <div class="flex items-center justify-between gap-4 border-b border-slate-100 px-5 py-4 dark:border-white/[0.07] sm:px-6">
-                    <div>
-                        <div class="flex items-center gap-2.5"><h3 class="font-display text-base font-bold text-navy dark:text-white">Vehículos en el taller</h3><span class="rounded-md bg-slate-100 px-2 py-0.5 font-mono text-[11px] font-semibold text-slate-500 dark:bg-white/[0.06] dark:text-slate-300" th:text="${vehiculosActivos != null ? #lists.size(vehiculosActivos) : 0}">0</span></div>
-                        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Seguimiento del trabajo activo</p>
+                <div class="mt-10 max-w-2xl">
+                    <p class="text-sm font-medium text-white/75"><span id="saludo-hora">Buen día,</span> <span th:text="${nombre}">Armando</span></p>
+                    <h1 class="mt-2 font-display text-4xl font-extrabold leading-[1.04] tracking-tight text-white sm:text-5xl lg:text-[62px]">El taller<br class="sm:hidden"> en movimiento<span class="text-turquoise-dark">.</span></h1>
+                    <p class="mt-4 max-w-lg text-sm leading-6 text-white/75 sm:text-base">Cada servicio avanza a su ritmo. Acá podés seguir el recorrido de cada vehículo, desde que llega hasta que vuelve a la ruta.</p>
+                    <div class="mt-6 flex flex-wrap items-center gap-3">
+                        <a th:href="@{/vehiculo/nuevo}" href="#" class="inline-flex items-center gap-2 rounded-lg bg-turquoise px-4 py-3 text-sm font-bold text-navy shadow-lg shadow-black/15 transition hover:-translate-y-0.5 hover:bg-white"><i class="bi bi-plus-lg" aria-hidden="true"></i>Recibir vehículo</a>
+                        <span class="rounded-full border border-white/20 bg-white/10 px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-white/80 backdrop-blur-sm" th:text="${rol}">ADMINISTRADOR</span>
                     </div>
-                    <a th:href="@{/vehiculo}" href="#" class="inline-flex items-center gap-1.5 text-sm font-semibold text-turquoise-hover transition hover:text-navy dark:text-turquoise-dark dark:hover:text-white">Ver todos <i class="bi bi-arrow-up-right text-xs" aria-hidden="true"></i></a>
                 </div>
+                <a href="https://unsplash.com/photos/a-car-in-a-garage-being-worked-on-by-a-mechanic-TCg8r4Z5Wu0" target="_blank" rel="noreferrer" class="mt-6 self-end text-[9px] text-white/55 hover:text-white/90">Foto: Frankie Cordoba / Unsplash</a>
+            </div>
+            <div class="pointer-events-none absolute bottom-6 right-6 hidden h-28 w-28 rounded-full border border-white/20 lg:block"></div>
+            <div class="pointer-events-none absolute bottom-11 right-11 hidden h-16 w-16 rounded-full border border-white/20 lg:block"></div>
+        </div>
 
-                <div th:if="${vehiculosActivos != null and !vehiculosActivos.empty}" class="divide-y divide-slate-100 dark:divide-white/[0.06]">
-                    <a th:each="vehiculo : ${vehiculosActivos}" th:href="@{/vehiculo/{id}(id=${vehiculo.id})}" href="#" class="group flex items-center gap-3 px-5 py-4 transition hover:bg-slate-50/80 dark:hover:bg-white/[0.025] sm:gap-4 sm:px-6">
-                        <span th:switch="${vehiculo.estado}" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 dark:bg-white/[0.06] dark:text-slate-300">
-                            <i th:case="'RECIBIDO'" class="bi bi-inbox" aria-hidden="true"></i>
-                            <i th:case="'EN_DIAGNOSTICO'" class="bi bi-search text-turquoise-hover dark:text-turquoise-dark" aria-hidden="true"></i>
-                            <i th:case="'EN_REPARACION'" class="bi bi-tools text-amber-600 dark:text-amber-400" aria-hidden="true"></i>
-                            <i th:case="'LISTO_PARA_ENTREGA'" class="bi bi-check2-circle text-turquoise-hover dark:text-turquoise-dark" aria-hidden="true"></i>
-                            <i th:case="*" class="bi bi-car-front" aria-hidden="true"></i>
-                        </span>
-                        <div class="min-w-0 flex-1">
-                            <p class="truncate text-sm font-semibold text-navy transition group-hover:text-turquoise-hover dark:text-white dark:group-hover:text-turquoise-dark"><span th:text="${vehiculo.marca}">Toyota</span> <span th:text="${vehiculo.modelo}">Corolla</span></p>
-                            <p class="mt-1 font-mono text-[11px] tracking-wide text-slate-500 dark:text-slate-400" th:text="${vehiculo.placa}">ABC-1234</p>
+        <!-- Alertas contextuales, solo aparecen cuando hay algo que atender -->
+        <div th:if="${(vehiculosListos != null and vehiculosListos > 0) or (repuestosStockBajo != null and repuestosStockBajo > 0)}" class="mt-6 flex flex-wrap items-center gap-2 border-y border-slate-200 py-3 dark:border-white/10">
+            <span class="mr-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">Atención</span>
+            <a th:if="${vehiculosListos != null and vehiculosListos > 0}" th:href="@{/vehiculo}" href="#" class="inline-flex items-center gap-2 rounded-md bg-amber-50 px-3 py-1.5 text-xs text-amber-900 transition hover:bg-amber-100 dark:bg-amber-400/10 dark:text-amber-200 dark:hover:bg-amber-400/15">
+                <i class="bi bi-flag-fill text-amber-600 dark:text-amber-400" aria-hidden="true"></i><strong th:text="${vehiculosListos}">0</strong> listo(s) para entregar <i class="bi bi-arrow-up-right text-[10px]" aria-hidden="true"></i>
+            </a>
+            <a th:if="${repuestosStockBajo != null and repuestosStockBajo > 0}" th:href="${rol == 'ADMINISTRADOR'} ? @{/repuesto} : @{/repuesto/catalogo}" href="#" class="inline-flex items-center gap-2 rounded-md bg-rose-50 px-3 py-1.5 text-xs text-rose-900 transition hover:bg-rose-100 dark:bg-rose-400/10 dark:text-rose-200 dark:hover:bg-rose-400/15">
+                <i class="bi bi-exclamation-triangle-fill text-rose-600 dark:text-rose-400" aria-hidden="true"></i><strong th:text="${repuestosStockBajo}">0</strong> con stock bajo <i class="bi bi-arrow-up-right text-[10px]" aria-hidden="true"></i>
+            </a>
+        </div>
+
+        <!-- Tablero Kanban: el flujo real del taller es el contenido principal -->
+        <div class="mt-8">
+            <div class="mb-4 flex items-end justify-between gap-4">
+                <div><h2 class="font-display text-lg font-bold text-navy dark:text-white">Flujo de vehículos</h2><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">De la recepción a la entrega</p></div>
+                <a th:href="@{/vehiculo}" href="#" class="hidden items-center gap-1.5 text-xs font-semibold text-slate-500 transition hover:text-turquoise-hover dark:text-slate-400 dark:hover:text-turquoise-dark sm:inline-flex">Abrir gestión de vehículos <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+            </div>
+
+            <div class="overflow-x-auto pb-3">
+                <div class="grid min-w-[1050px] grid-cols-4 gap-3 xl:gap-4">
+                    <!-- Recibidos -->
+                    <section data-lane="RECIBIDO" class="min-h-[310px] rounded-xl bg-[#E8EDF2] p-3 dark:bg-white/[0.035] sm:p-4">
+                        <div class="mb-3 flex items-center justify-between border-b border-slate-300/70 pb-3 dark:border-white/10">
+                            <div class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-slate-400"></span><h3 class="text-sm font-bold text-navy dark:text-white">Recibidos</h3></div>
+                            <span class="font-mono text-[10px] font-semibold text-slate-400">01</span>
                         </div>
-                        <span th:switch="${vehiculo.estado}" class="shrink-0">
-                            <span th:case="'RECIBIDO'" class="rounded-md border border-slate-200 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:border-white/10 dark:text-slate-300">Recibido</span>
-                            <span th:case="'EN_DIAGNOSTICO'" class="rounded-md border border-turquoise/30 bg-turquoise/5 px-2.5 py-1 text-[11px] font-semibold text-turquoise-hover dark:border-turquoise-dark/20 dark:bg-turquoise-dark/5 dark:text-turquoise-dark">En diagnóstico</span>
-                            <span th:case="'EN_REPARACION'" class="rounded-md bg-amber-100 px-2.5 py-1 text-[11px] font-semibold text-amber-800 dark:bg-amber-400/10 dark:text-amber-300">En reparación</span>
-                            <span th:case="'LISTO_PARA_ENTREGA'" class="rounded-md bg-turquoise/10 px-2.5 py-1 text-[11px] font-semibold text-turquoise-hover dark:bg-turquoise-dark/10 dark:text-turquoise-dark">Listo para entrega</span>
-                            <span th:case="*" th:text="${vehiculo.estado}" class="rounded-md border border-slate-200 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:border-white/10 dark:text-slate-300">Estado</span>
-                        </span>
-                        <i class="bi bi-chevron-right hidden text-xs text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-turquoise sm:block" aria-hidden="true"></i>
+                        <div class="lane-items space-y-2">
+                            <a th:each="vehiculo : ${vehiculosActivos}" th:if="${vehiculo.estado == 'RECIBIDO'}" th:href="@{/vehiculo/{id}(id=${vehiculo.id})}" href="#" class="vehicle-card group block rounded-lg border border-slate-200 bg-white p-3.5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:border-white/[0.07] dark:bg-navy-surface dark:hover:border-white/15">
+                                <div class="flex items-start justify-between gap-2"><p class="text-sm font-bold text-navy dark:text-white"><span th:text="${vehiculo.marca}">Toyota</span> <span th:text="${vehiculo.modelo}">Corolla</span></p><i class="bi bi-arrow-up-right text-xs text-slate-300 transition group-hover:text-turquoise" aria-hidden="true"></i></div>
+                                <p class="mt-2 font-mono text-[11px] tracking-wider text-slate-500 dark:text-slate-400" th:text="${vehiculo.placa}">ABC-1234</p>
+                                <div class="mt-3 flex items-center gap-1.5 border-t border-slate-100 pt-2.5 text-[10px] font-medium text-slate-400 dark:border-white/[0.06] dark:text-slate-500"><i class="bi bi-inbox" aria-hidden="true"></i> Pendiente de diagnóstico</div>
+                            </a>
+                            <p class="lane-empty rounded-lg border border-dashed border-slate-300/80 px-3 py-5 text-center text-xs text-slate-400 dark:border-white/10 dark:text-slate-500">Sin vehículos en esta etapa</p>
+                        </div>
+                    </section>
+
+                    <!-- Diagnóstico -->
+                    <section data-lane="EN_DIAGNOSTICO" class="min-h-[310px] rounded-xl bg-[#E8EDF2] p-3 dark:bg-white/[0.035] sm:p-4">
+                        <div class="mb-3 flex items-center justify-between border-b border-slate-300/70 pb-3 dark:border-white/10">
+                            <div class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-sky-500"></span><h3 class="text-sm font-bold text-navy dark:text-white">Diagnóstico</h3></div>
+                            <span class="font-mono text-[10px] font-semibold text-slate-400">02</span>
+                        </div>
+                        <div class="lane-items space-y-2">
+                            <a th:each="vehiculo : ${vehiculosActivos}" th:if="${vehiculo.estado == 'EN_DIAGNOSTICO'}" th:href="@{/vehiculo/{id}(id=${vehiculo.id})}" href="#" class="vehicle-card group block rounded-lg border border-slate-200 bg-white p-3.5 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-md dark:border-white/[0.07] dark:bg-navy-surface dark:hover:border-sky-400/30">
+                                <div class="flex items-start justify-between gap-2"><p class="text-sm font-bold text-navy dark:text-white"><span th:text="${vehiculo.marca}">Toyota</span> <span th:text="${vehiculo.modelo}">Corolla</span></p><i class="bi bi-arrow-up-right text-xs text-slate-300 transition group-hover:text-sky-500" aria-hidden="true"></i></div>
+                                <p class="mt-2 font-mono text-[11px] tracking-wider text-slate-500 dark:text-slate-400" th:text="${vehiculo.placa}">ABC-1234</p>
+                                <div class="mt-3 flex items-center gap-1.5 border-t border-slate-100 pt-2.5 text-[10px] font-medium text-sky-700 dark:border-white/[0.06] dark:text-sky-300"><i class="bi bi-search" aria-hidden="true"></i> Revisión técnica</div>
+                            </a>
+                            <p class="lane-empty rounded-lg border border-dashed border-slate-300/80 px-3 py-5 text-center text-xs text-slate-400 dark:border-white/10 dark:text-slate-500">Sin vehículos en esta etapa</p>
+                        </div>
+                    </section>
+
+                    <!-- Reparación -->
+                    <section data-lane="EN_REPARACION" class="min-h-[310px] rounded-xl bg-[#E8EDF2] p-3 dark:bg-white/[0.035] sm:p-4">
+                        <div class="mb-3 flex items-center justify-between border-b border-slate-300/70 pb-3 dark:border-white/10">
+                            <div class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-turquoise"></span><h3 class="text-sm font-bold text-navy dark:text-white">En reparación</h3></div>
+                            <span class="font-mono text-[10px] font-semibold text-slate-400">03</span>
+                        </div>
+                        <div class="lane-items space-y-2">
+                            <a th:each="vehiculo : ${vehiculosActivos}" th:if="${vehiculo.estado == 'EN_REPARACION'}" th:href="@{/vehiculo/{id}(id=${vehiculo.id})}" href="#" class="vehicle-card group block rounded-lg border border-slate-200 bg-white p-3.5 shadow-sm transition hover:-translate-y-0.5 hover:border-turquoise/50 hover:shadow-md dark:border-white/[0.07] dark:bg-navy-surface dark:hover:border-turquoise-dark/30">
+                                <div class="flex items-start justify-between gap-2"><p class="text-sm font-bold text-navy dark:text-white"><span th:text="${vehiculo.marca}">Toyota</span> <span th:text="${vehiculo.modelo}">Corolla</span></p><i class="bi bi-arrow-up-right text-xs text-slate-300 transition group-hover:text-turquoise" aria-hidden="true"></i></div>
+                                <p class="mt-2 font-mono text-[11px] tracking-wider text-slate-500 dark:text-slate-400" th:text="${vehiculo.placa}">ABC-1234</p>
+                                <div class="mt-3 flex items-center gap-1.5 border-t border-slate-100 pt-2.5 text-[10px] font-medium text-turquoise-hover dark:border-white/[0.06] dark:text-turquoise-dark"><i class="bi bi-tools" aria-hidden="true"></i> Trabajo en curso</div>
+                            </a>
+                            <p class="lane-empty rounded-lg border border-dashed border-slate-300/80 px-3 py-5 text-center text-xs text-slate-400 dark:border-white/10 dark:text-slate-500">Sin vehículos en esta etapa</p>
+                        </div>
+                    </section>
+
+                    <!-- Listos -->
+                    <section data-lane="LISTO_PARA_ENTREGA" class="min-h-[310px] rounded-xl bg-[#E8EDF2] p-3 dark:bg-white/[0.035] sm:p-4">
+                        <div class="mb-3 flex items-center justify-between border-b border-slate-300/70 pb-3 dark:border-white/10">
+                            <div class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-amber-500"></span><h3 class="text-sm font-bold text-navy dark:text-white">Listos para entregar</h3></div>
+                            <span class="font-mono text-[10px] font-semibold text-slate-400">04</span>
+                        </div>
+                        <div class="lane-items space-y-2">
+                            <a th:each="vehiculo : ${vehiculosActivos}" th:if="${vehiculo.estado == 'LISTO_PARA_ENTREGA'}" th:href="@{/vehiculo/{id}(id=${vehiculo.id})}" href="#" class="vehicle-card group block rounded-lg border border-amber-200 bg-white p-3.5 shadow-sm transition hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-md dark:border-amber-400/20 dark:bg-navy-surface dark:hover:border-amber-400/40">
+                                <div class="flex items-start justify-between gap-2"><p class="text-sm font-bold text-navy dark:text-white"><span th:text="${vehiculo.marca}">Toyota</span> <span th:text="${vehiculo.modelo}">Corolla</span></p><i class="bi bi-arrow-up-right text-xs text-slate-300 transition group-hover:text-amber-500" aria-hidden="true"></i></div>
+                                <p class="mt-2 font-mono text-[11px] tracking-wider text-slate-500 dark:text-slate-400" th:text="${vehiculo.placa}">ABC-1234</p>
+                                <div class="mt-3 flex items-center gap-1.5 border-t border-slate-100 pt-2.5 text-[10px] font-semibold text-amber-700 dark:border-white/[0.06] dark:text-amber-300"><i class="bi bi-check2-circle" aria-hidden="true"></i> Coordinar entrega</div>
+                            </a>
+                            <p class="lane-empty rounded-lg border border-dashed border-slate-300/80 px-3 py-5 text-center text-xs text-slate-400 dark:border-white/10 dark:text-slate-500">Sin vehículos en esta etapa</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dos registros secundarios, sin competir con el flujo principal -->
+        <div class="mt-8 grid grid-cols-1 gap-8 border-t border-slate-200 pt-6 dark:border-white/10 lg:grid-cols-2">
+            <section>
+                <div class="flex items-end justify-between gap-3">
+                    <div><p class="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">Registro</p><h2 class="mt-1 font-display text-base font-bold text-navy dark:text-white">Facturación reciente</h2></div>
+                    <a th:href="@{/factura}" href="#" class="text-xs font-semibold text-turquoise-hover hover:underline dark:text-turquoise-dark">Historial completo <span aria-hidden="true">→</span></a>
+                </div>
+                <div th:if="${ultimasFacturas != null and !ultimasFacturas.empty}" class="mt-3 divide-y divide-slate-200 dark:divide-white/[0.07]">
+                    <a th:each="f : ${ultimasFacturas}" th:href="@{/factura/{id}(id=${f.id})}" href="#" class="flex items-center gap-3 py-3 transition hover:bg-white/60 dark:hover:bg-white/[0.025]">
+                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-[11px] font-bold text-turquoise-hover ring-1 ring-slate-200 dark:bg-navy-surface dark:text-turquoise-dark dark:ring-white/10" th:text="${#strings.toUpperCase(#strings.substring(f.cliente_nombre,0,1))}">C</span>
+                        <span class="min-w-0 flex-1"><span class="block truncate text-sm font-semibold text-navy dark:text-white" th:text="${f.cliente_nombre}">Juan Pérez</span><span class="mt-0.5 block font-mono text-[10px] text-slate-500 dark:text-slate-400" th:text="${f.placa}">ABC-1234</span></span>
+                        <span class="shrink-0 text-right"><span class="block font-mono text-xs font-bold text-navy dark:text-white" th:text="'L. ' + ${#numbers.formatDecimal(f.monto_total, 1, 'COMMA', 2, 'POINT')}">L. 2,100.00</span><span class="mt-0.5 block text-[10px] text-slate-400" th:text="${f.fecha}">2026-07-27</span></span>
                     </a>
                 </div>
+                <p th:if="${ultimasFacturas == null or ultimasFacturas.empty}" class="mt-3 border-y border-slate-200 py-5 text-sm text-slate-500 dark:border-white/10 dark:text-slate-400">Todavía no se han generado facturas.</p>
+            </section>
 
-                <div th:if="${vehiculosActivos == null or vehiculosActivos.empty}" class="px-6 py-12 text-center">
-                    <span class="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-400 dark:bg-white/[0.06] dark:text-slate-500"><i class="bi bi-car-front text-lg" aria-hidden="true"></i></span>
-                    <p class="mt-3 text-sm font-semibold text-navy dark:text-white">El taller está despejado</p>
-                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Cuando recibas un vehículo, su seguimiento aparecerá aquí.</p>
-                    <a th:href="@{/vehiculo/nuevo}" href="#" class="mt-4 inline-flex items-center gap-2 rounded-lg bg-turquoise px-3.5 py-2 text-sm font-semibold text-navy transition hover:bg-turquoise-hover hover:text-white"><i class="bi bi-plus-lg" aria-hidden="true"></i>Registrar vehículo</a>
+            <section>
+                <div class="flex items-end justify-between gap-3">
+                    <div><p class="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">Suministros</p><h2 class="mt-1 font-display text-base font-bold text-navy dark:text-white">Repuestos por revisar</h2></div>
+                    <a th:if="${rol == 'ADMINISTRADOR'}" th:href="@{/repuesto}" href="#" class="text-xs font-semibold text-turquoise-hover hover:underline dark:text-turquoise-dark">Inventario <span aria-hidden="true">→</span></a>
+                    <a th:if="${rol != 'ADMINISTRADOR'}" th:href="@{/repuesto/catalogo}" href="#" class="text-xs font-semibold text-turquoise-hover hover:underline dark:text-turquoise-dark">Catálogo <span aria-hidden="true">→</span></a>
                 </div>
-            </article>
-
-            <div class="space-y-5 xl:col-span-4">
-                <article class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm shadow-slate-900/[0.02] dark:border-white/[0.07] dark:bg-navy-surface">
-                    <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-white/[0.07]">
-                        <div><h3 class="font-display text-sm font-bold text-navy dark:text-white">Inventario que requiere atención</h3><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Repuestos con pocas unidades</p></div>
-                        <i class="bi bi-box-seam text-slate-400 dark:text-slate-500" aria-hidden="true"></i>
-                    </div>
-                    <div th:if="${repuestosCriticos != null and !repuestosCriticos.empty}" class="divide-y divide-slate-100 dark:divide-white/[0.06]">
-                        <a th:each="r : ${repuestosCriticos}" th:href="@{/repuesto/{id}(id=${r.id})}" href="#" class="flex items-center gap-3 px-5 py-3 transition hover:bg-slate-50 dark:hover:bg-white/[0.025]">
-                            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-400/10 dark:text-rose-400"><i class="bi bi-exclamation-lg" aria-hidden="true"></i></span>
-                            <span class="min-w-0 flex-1 truncate text-sm font-medium text-navy dark:text-white" th:text="${r.nombre}">Filtro de aceite</span>
-                            <span th:text="${r.stock} + ' uds.'" th:classappend="${r.stock == 0} ? 'bg-rose-100 text-rose-700 dark:bg-rose-400/10 dark:text-rose-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-400/10 dark:text-amber-300'" class="shrink-0 rounded-md px-2 py-1 text-[10px] font-bold"></span>
-                        </a>
-                    </div>
-                    <div th:if="${repuestosCriticos == null or repuestosCriticos.empty}" class="px-5 py-5">
-                        <p class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400"><i class="bi bi-check-circle-fill text-turquoise-hover dark:text-turquoise-dark" aria-hidden="true"></i> Sin alertas de inventario.</p>
-                    </div>
-                    <div class="border-t border-slate-100 px-5 py-3 dark:border-white/[0.07]">
-                        <a th:if="${rol == 'ADMINISTRADOR'}" th:href="@{/repuesto}" href="#" class="text-xs font-semibold text-turquoise-hover hover:underline dark:text-turquoise-dark">Abrir inventario <span aria-hidden="true">→</span></a>
-                        <a th:if="${rol != 'ADMINISTRADOR'}" th:href="@{/repuesto/catalogo}" href="#" class="text-xs font-semibold text-turquoise-hover hover:underline dark:text-turquoise-dark">Ver catálogo <span aria-hidden="true">→</span></a>
-                    </div>
-                </article>
-
-                <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-900/[0.02] dark:border-white/[0.07] dark:bg-navy-surface">
-                    <h3 class="font-display text-sm font-bold text-navy dark:text-white">Accesos directos</h3>
-                    <div class="mt-3 grid grid-cols-2 gap-2">
-                        <a th:href="@{/cliente/nuevo}" href="#" class="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2.5 text-xs font-semibold text-slate-600 transition hover:border-turquoise/50 hover:bg-turquoise/5 hover:text-navy dark:border-white/10 dark:text-slate-300 dark:hover:border-turquoise-dark/30 dark:hover:bg-turquoise-dark/5 dark:hover:text-white"><i class="bi bi-person-plus text-turquoise-hover dark:text-turquoise-dark" aria-hidden="true"></i>Cliente</a>
-                        <a th:href="@{/factura/nueva}" href="#" class="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2.5 text-xs font-semibold text-slate-600 transition hover:border-turquoise/50 hover:bg-turquoise/5 hover:text-navy dark:border-white/10 dark:text-slate-300 dark:hover:border-turquoise-dark/30 dark:hover:bg-turquoise-dark/5 dark:hover:text-white"><i class="bi bi-receipt text-turquoise-hover dark:text-turquoise-dark" aria-hidden="true"></i>Factura</a>
-                        <a th:if="${rol == 'ADMINISTRADOR'}" th:href="@{/lote/nuevo}" href="#" class="col-span-2 flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2.5 text-xs font-semibold text-slate-600 transition hover:border-turquoise/50 hover:bg-turquoise/5 hover:text-navy dark:border-white/10 dark:text-slate-300 dark:hover:border-turquoise-dark/30 dark:hover:bg-turquoise-dark/5 dark:hover:text-white"><i class="bi bi-box-seam text-turquoise-hover dark:text-turquoise-dark" aria-hidden="true"></i>Crear pedido de lote</a>
-                    </div>
-                </article>
-            </div>
+                <div th:if="${repuestosCriticos != null and !repuestosCriticos.empty}" class="mt-3 divide-y divide-slate-200 dark:divide-white/[0.07]">
+                    <a th:each="r : ${repuestosCriticos}" th:href="@{/repuesto/{id}(id=${r.id})}" href="#" class="flex items-center gap-3 py-3 transition hover:bg-white/60 dark:hover:bg-white/[0.025]">
+                        <i class="bi bi-exclamation-circle text-rose-500 dark:text-rose-400" aria-hidden="true"></i>
+                        <span class="min-w-0 flex-1 truncate text-sm font-medium text-navy dark:text-white" th:text="${r.nombre}">Filtro de aceite</span>
+                        <span th:text="${r.stock} + ' unidades'" th:classappend="${r.stock == 0} ? 'text-rose-600 dark:text-rose-400' : 'text-amber-700 dark:text-amber-300'" class="text-xs font-semibold"></span>
+                    </a>
+                </div>
+                <p th:if="${repuestosCriticos == null or repuestosCriticos.empty}" class="mt-3 flex items-center gap-2 border-y border-slate-200 py-5 text-sm text-slate-500 dark:border-white/10 dark:text-slate-400"><i class="bi bi-check-circle text-turquoise-hover dark:text-turquoise-dark" aria-hidden="true"></i> Inventario sin alertas.</p>
+            </section>
         </div>
 
-        <!-- Historial reciente, con nombre alineado al contenido real -->
-        <article class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm shadow-slate-900/[0.02] dark:border-white/[0.07] dark:bg-navy-surface">
-            <div class="flex items-center justify-between gap-4 border-b border-slate-100 px-5 py-4 dark:border-white/[0.07] sm:px-6">
-                <div><h3 class="font-display text-base font-bold text-navy dark:text-white">Últimas facturas</h3><p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Actividad reciente de facturación</p></div>
-                <a th:href="@{/factura}" href="#" class="inline-flex items-center gap-1.5 text-sm font-semibold text-turquoise-hover hover:text-navy dark:text-turquoise-dark dark:hover:text-white">Ver todas <i class="bi bi-arrow-up-right text-xs" aria-hidden="true"></i></a>
-            </div>
-            <div th:if="${ultimasFacturas != null and !ultimasFacturas.empty}" class="divide-y divide-slate-100 dark:divide-white/[0.06]">
-                <a th:each="f : ${ultimasFacturas}" th:href="@{/factura/{id}(id=${f.id})}" href="#" class="flex items-center gap-3 px-5 py-3.5 transition hover:bg-slate-50/80 dark:hover:bg-white/[0.025] sm:gap-4 sm:px-6">
-                    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-turquoise/10 text-xs font-bold text-turquoise-hover dark:bg-turquoise-dark/10 dark:text-turquoise-dark" th:text="${#strings.toUpperCase(#strings.substring(f.cliente_nombre,0,1))}">C</span>
-                    <span class="min-w-0 flex-1"><span class="block truncate text-sm font-semibold text-navy dark:text-white" th:text="${f.cliente_nombre}">Juan Pérez</span><span class="mt-0.5 block font-mono text-[11px] text-slate-500 dark:text-slate-400" th:text="${f.placa}">ABC-1234</span></span>
-                    <span class="shrink-0 text-right"><span class="block font-mono text-sm font-semibold text-navy dark:text-white" th:text="'L. ' + ${#numbers.formatDecimal(f.monto_total, 1, 'COMMA', 2, 'POINT')}">L. 2,100.00</span><span class="mt-0.5 block text-[11px] text-slate-400" th:text="${f.fecha}">2026-07-27</span></span>
-                    <i class="bi bi-chevron-right hidden text-xs text-slate-300 sm:block" aria-hidden="true"></i>
-                </a>
-            </div>
-            <div th:if="${ultimasFacturas == null or ultimasFacturas.empty}" class="px-6 py-9 text-center">
-                <i class="bi bi-receipt text-xl text-slate-300 dark:text-slate-600" aria-hidden="true"></i>
-                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Todavía no se ha generado ninguna factura.</p>
-            </div>
-        </article>
+        <!-- Atajos integrados como acciones de trabajo, no como panel adicional -->
+        <nav aria-label="Acciones frecuentes" class="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-slate-200 pt-4 dark:border-white/10">
+            <span class="mr-1 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500">Crear</span>
+            <a th:href="@{/cliente/nuevo}" href="#" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 transition hover:text-turquoise-hover dark:text-slate-400 dark:hover:text-turquoise-dark"><i class="bi bi-person-plus" aria-hidden="true"></i>Cliente</a>
+            <a th:href="@{/factura/nueva}" href="#" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 transition hover:text-turquoise-hover dark:text-slate-400 dark:hover:text-turquoise-dark"><i class="bi bi-receipt" aria-hidden="true"></i>Factura</a>
+            <a th:if="${rol == 'ADMINISTRADOR'}" th:href="@{/lote/nuevo}" href="#" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 transition hover:text-turquoise-hover dark:text-slate-400 dark:hover:text-turquoise-dark"><i class="bi bi-box-seam" aria-hidden="true"></i>Pedido de lote</a>
+        </nav>
     </section>
     <div th:replace="~{fragments/footer :: footer}"></div>
 </main>
@@ -230,11 +239,18 @@
     let saludo = 'Buenas noches,';
     if (horaActual >= 5 && horaActual < 12) saludo = 'Buenos días,';
     else if (horaActual >= 12 && horaActual < 19) saludo = 'Buenas tardes,';
-    document.getElementById('saludo-hora').textContent = saludo;
+    const saludoEl = document.getElementById('saludo-hora');
+    if (saludoEl) saludoEl.textContent = saludo;
 
     const fechaFormateada = new Date().toLocaleDateString('es-HN', { weekday: 'long', day: 'numeric', month: 'long' });
-    const fecha = document.getElementById('fecha-hoy');
-    if (fecha) fecha.textContent = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
+    const fechaEl = document.getElementById('fecha-hoy');
+    if (fechaEl) fechaEl.textContent = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
+
+    document.querySelectorAll('[data-lane]').forEach((lane) => {
+        const cards = lane.querySelectorAll('.vehicle-card');
+        const empty = lane.querySelector('.lane-empty');
+        if (empty && cards.length > 0) empty.classList.add('hidden');
+    });
 </script>
 </body>
 </html>

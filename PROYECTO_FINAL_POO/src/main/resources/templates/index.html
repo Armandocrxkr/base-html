@@ -35,43 +35,67 @@
     <style>
         html { scroll-behavior: smooth; }
 
+        :root { color-scheme: light; }
+        .dark { color-scheme: dark; }
+
+        /* Detalles editoriales para la portada y el flujo de servicio */
+        .hero-photo { object-position: 55% center; }
+        .hero-title { text-wrap: balance; }
+        .faq-item { transition: border-color .25s ease, background-color .25s ease, box-shadow .25s ease; }
+        .faq-item[open] { border-color: rgba(20,184,179,.5); box-shadow: 0 16px 44px rgba(11,37,69,.07); }
+        .faq-item summary { list-style: none; }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item[open] summary { color: #0B2545; }
+        .dark .faq-item[open] summary { color: #fff; }
+        .faq-item summary:focus-visible { outline: 2px solid #14B8B3; outline-offset: 4px; border-radius: 10px; }
+        .faq-icon { transition: transform .25s ease, background-color .25s ease, color .25s ease; }
+        .faq-item[open] .faq-icon { transform: rotate(45deg); background: #14B8B3; color: #0B2545; }
+        .dark .faq-item[open] .faq-icon { background: #2DD4CF; }
+
         /* Transición suave para la barra de progreso */
         #stepper-bar {
+            height: 3px;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, #14B8B3, #65DDD2);
+            box-shadow: 0 0 15px rgba(20,184,179,.32);
             transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* Transición suave para los dots del stepper */
         .stepper-dot {
             transition: background-color 0.35s ease, border-color 0.35s ease,
-            color 0.35s ease, box-shadow 0.35s ease;
+            color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
         }
+        .stepper-dot.ring-4 { transform: scale(1.12); }
         .stepper-label {
             transition: color 0.35s ease, font-weight 0.35s ease;
         }
     </style>
 </head>
-<body class="bg-white dark:bg-graphite font-sans transition-colors duration-300">
+<body class="bg-[#F7F8F7] dark:bg-graphite font-sans transition-colors duration-300">
 
 <!-- ============ NAV ============ -->
-<header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-graphite/80 backdrop-blur-sm border-b border-slate-100 dark:border-white/5">
-    <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-            <img th:src="@{/img/logo-icon_1.png}" src="/img/logo-icon.png" alt="AutoGest" class="h-9 w-9 object-contain">
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-slate-200/70 bg-[#F7F8F7]/90 backdrop-blur-xl dark:border-white/[0.06] dark:bg-graphite/90">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-[76px] flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-slate-200/80 dark:bg-navy-surface dark:ring-white/10">
+                <img th:src="@{/img/logo-icon_1.png}" src="/img/logo-icon.png" alt="AutoGest" class="h-7 w-7 object-contain">
+            </span>
             <span class="font-display font-extrabold text-lg tracking-tight text-navy dark:text-white">AUTOGEST</span>
         </div>
 
-        <nav class="flex items-center gap-3">
+        <nav class="flex items-center gap-1 sm:gap-2">
             <button id="theme-toggle" aria-label="Cambiar modo claro u oscuro"
-                    class="h-9 w-9 rounded-full border border-slate-200 dark:border-white/10 flex items-center justify-center text-navy dark:text-slate-200 hover:border-turquoise dark:hover:border-turquoise-dark transition-colors">
+                    class="h-10 w-10 rounded-full border border-slate-200 dark:border-white/10 flex items-center justify-center text-navy dark:text-slate-200 hover:border-turquoise dark:hover:border-turquoise-dark transition-colors bg-white/70 dark:bg-white/[0.03]">
                 <svg id="icon-moon" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
                 <svg id="icon-sun" class="h-4 w-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36 6.36l-.7-.7M6.34 6.34l-.7-.7m12.72 0l-.7.7M6.34 17.66l-.7.7M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             </button>
             <a th:href="@{/usuario/login}" href="#"
-               class="px-4 py-2 text-sm font-medium text-navy dark:text-white hover:text-turquoise dark:hover:text-turquoise-dark transition-colors">
+               class="px-3 py-2.5 text-sm font-semibold text-navy dark:text-white hover:text-turquoise dark:hover:text-turquoise-dark transition-colors sm:px-4">
                 Iniciar sesión
             </a>
             <a th:href="@{/usuario/registro}" href="#"
-               class="px-4 py-2 rounded-lg text-sm font-medium bg-turquoise hover:bg-turquoise-hover dark:bg-turquoise-dark dark:hover:bg-turquoise-darkhover text-white dark:text-navy transition-colors">
+               class="px-4 py-2.5 rounded-full text-sm font-semibold bg-turquoise hover:bg-turquoise-hover dark:bg-turquoise-dark dark:hover:bg-turquoise-darkhover text-navy transition-all hover:-translate-y-0.5 shadow-sm shadow-turquoise/20">
                 Registro
             </a>
         </nav>
@@ -79,118 +103,116 @@
 </header>
 
 <!-- ============ HERO ============ -->
-<main class="relative overflow-hidden">
-    <!-- Fondo decorativo -->
-    <svg class="absolute -right-24 top-24 w-[520px] h-[520px] opacity-[0.07] dark:opacity-[0.12] pointer-events-none" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.4">
-        <circle cx="100" cy="100" r="86" class="text-navy dark:text-turquoise-dark"/>
-        <circle cx="100" cy="100" r="58" class="text-turquoise dark:text-turquoise-dark"/>
-        <path d="M100 14 L100 42" class="text-navy dark:text-turquoise-dark"/>
-        <circle cx="100" cy="14" r="6" fill="currentColor" class="text-turquoise dark:text-turquoise-dark"/>
-        <path d="M158 62 L136 78" class="text-navy dark:text-turquoise-dark"/>
-        <circle cx="158" cy="62" r="6" fill="currentColor" class="text-turquoise dark:text-turquoise-dark"/>
-        <path d="M42 138 L64 122" class="text-navy dark:text-turquoise-dark"/>
-        <circle cx="42" cy="138" r="6" fill="currentColor" class="text-turquoise dark:text-turquoise-dark"/>
-    </svg>
-
-    <section class="max-w-6xl mx-auto px-6 pt-44 pb-20">
-        <!-- Hero Content -->
-        <div class="max-w-2xl">
-            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-turquoise/10 text-turquoise-hover dark:bg-turquoise-dark/10 dark:text-turquoise-dark mb-6">
-                Taller automotriz · Yonker · Inventario
-            </span>
-            <h1 class="font-display font-extrabold text-5xl md:text-6xl leading-[1.05] text-navy dark:text-white">
-                Acelera tu gestión.<br>
-                <span class="text-turquoise dark:text-turquoise-dark">Frena tus problemas.</span>
-            </h1>
-            <p class="mt-6 text-lg text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed">
-                AutoGest centraliza tus vehículos, repuestos, clientes y proveedores en un
-                solo lugar, para que tu taller deje de operar a base de cuadernos y hojas sueltas.
-            </p>
-            <div class="mt-9 flex flex-wrap items-center gap-4">
-                <a th:href="@{/usuario/registro}" href="#"
-                   class="px-6 py-3 rounded-lg bg-turquoise hover:bg-turquoise-hover dark:bg-turquoise-dark dark:hover:bg-turquoise-darkhover text-white dark:text-navy font-semibold text-sm transition-colors shadow-lg shadow-turquoise/20">
-                    Comenzar ahora
-                </a>
-                <a th:href="@{/usuario/login}" href="#"
-                   class="px-6 py-3 rounded-lg border border-slate-200 dark:border-white/10 text-navy dark:text-white font-semibold text-sm hover:border-turquoise dark:hover:border-turquoise-dark transition-colors">
-                    Ya tengo cuenta
-                </a>
+<main class="relative overflow-hidden bg-[#F7F8F7] dark:bg-graphite">
+    <section class="max-w-[1500px] mx-auto px-4 pt-28 pb-8 sm:px-6 sm:pt-32 sm:pb-12">
+        <div class="group relative isolate flex min-h-[520px] overflow-hidden rounded-[28px] bg-navy shadow-2xl shadow-navy/10 dark:shadow-black/20 sm:min-h-[590px] lg:min-h-[650px] lg:rounded-[36px]">
+            <img src="https://images.unsplash.com/photo-1646807284302-170c9505b2e7?auto=format&amp;fit=crop&amp;fm=jpg&amp;q=85&amp;w=2400"
+                 alt="Mecánico trabajando en un vehículo dentro de un taller" class="hero-photo absolute inset-0 -z-20 h-full w-full object-cover transition duration-700 group-hover:scale-[1.015]" fetchpriority="high">
+            <div class="absolute inset-0 -z-10 bg-gradient-to-r from-[#071A32]/95 via-[#0B2545]/78 to-[#0B2545]/15 dark:from-[#07111F]/95 dark:via-[#0B1B2E]/80 dark:to-[#0B1B2E]/25"></div>
+            <div class="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-[#071A32]/45 to-transparent"></div>
+            <div class="pointer-events-none absolute -right-16 -top-24 -z-10 h-[380px] w-[380px] rounded-full border border-white/20 sm:h-[500px] sm:w-[500px]"></div>
+            <div class="pointer-events-none absolute -right-4 -top-12 -z-10 h-[260px] w-[260px] rounded-full border border-white/15 sm:h-[360px] sm:w-[360px]"></div>
+            <div class="flex w-full flex-col justify-center px-6 py-12 sm:px-10 lg:px-16">
+                <div class="max-w-3xl">
+                    <span class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-[10px] font-semibold tracking-[0.12em] text-white/90 backdrop-blur-sm sm:text-xs">
+                        <span class="h-1.5 w-1.5 rounded-full bg-turquoise-dark"></span>Taller automotriz · Yonker · Inventario
+                    </span>
+                    <h1 class="hero-title mt-7 font-display font-extrabold text-[42px] leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-[76px]">
+                        Acelera tu gestión.<br>
+                        <span class="text-turquoise-dark">Frena tus problemas.</span>
+                    </h1>
+                    <p class="mt-6 max-w-xl text-base leading-7 text-white/80 sm:text-lg sm:leading-8">
+                        AutoGest centraliza tus vehículos, repuestos, clientes y proveedores en un
+                        solo lugar, para que tu taller deje de operar a base de cuadernos y hojas sueltas.
+                    </p>
+                    <div class="mt-8 flex flex-wrap items-center gap-3">
+                        <a th:href="@{/usuario/registro}" href="#"
+                           class="rounded-full bg-turquoise px-6 py-3.5 text-sm font-bold text-navy shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:bg-white">
+                            Comenzar ahora
+                        </a>
+                        <a th:href="@{/usuario/login}" href="#"
+                           class="rounded-full border border-white/35 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:border-white hover:bg-white/10">
+                            Ya tengo cuenta
+                        </a>
+                    </div>
+                </div>
+                <a href="https://unsplash.com/photos/a-car-in-a-garage-being-worked-on-by-a-mechanic-TCg8r4Z5Wu0" target="_blank" rel="noreferrer" class="absolute bottom-4 right-5 text-[9px] text-white/50 transition hover:text-white/85">Foto: Frankie Cordoba / Unsplash</a>
             </div>
         </div>
     </section>
 
     <!-- ============ SECCIÓN 2: EL FLUJO DE UN VEHÍCULO EN VIVO ============ -->
-    <section class="max-w-6xl mx-auto px-6 pb-28">
-        <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-navy-surface p-8 sm:p-10 shadow-xl shadow-navy/5 dark:shadow-none">
+    <section class="max-w-[1320px] mx-auto px-4 pb-24 sm:px-6 sm:pb-28">
+        <div class="rounded-[28px] border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-navy-surface p-5 shadow-[0_24px_80px_-38px_rgba(11,37,69,.22)] dark:shadow-black/10 sm:p-8 lg:p-10">
 
-            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-10">
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-9">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-turquoise-hover dark:text-turquoise-dark mb-1.5">Así se mueve un vehículo por tu taller</p>
-                    <h2 class="font-display font-bold text-2xl text-navy dark:text-white">De la llave en mano a la entrega, sin perder el hilo</h2>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-turquoise-hover dark:text-turquoise-dark mb-2">Así se mueve un vehículo por tu taller</p>
+                    <h2 class="font-display font-bold text-2xl leading-tight text-navy dark:text-white sm:text-[28px]">De la llave en mano a la entrega, sin perder el hilo</h2>
                 </div>
-                <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-slate-400">
+                <span class="hidden sm:inline-flex items-center gap-2 rounded-full border border-turquoise/15 bg-turquoise/[0.06] px-3.5 py-2 text-[11px] font-semibold text-slate-500 dark:border-turquoise-dark/15 dark:bg-turquoise-dark/[0.06] dark:text-slate-300">
                     <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-turquoise opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-turquoise"></span>
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-turquoise opacity-60"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-turquoise dark:bg-turquoise-dark"></span>
                     </span>
                     Estado actualizándose en tiempo real
                 </span>
             </div>
 
             <!-- Stepper del ciclo de vida -->
-            <div class="relative mb-12">
+            <div class="relative mb-10 rounded-2xl bg-[#F7F9F9] px-2 py-6 dark:bg-white/[0.025] sm:mb-12 sm:px-5 sm:py-7">
                 <!-- Barra de fondo (estática) -->
-                <div class="absolute left-0 right-0 top-5 h-0.5 bg-slate-100 dark:bg-white/5"></div>
+                <div class="absolute left-[10%] right-[10%] top-[47px] h-[3px] rounded-full bg-slate-200 dark:bg-white/10 sm:top-[51px]"></div>
                 <!-- Barra de progreso animada — se le añade id="stepper-bar" -->
-                <div id="stepper-bar" class="absolute left-0 top-5 h-0.5 bg-turquoise dark:bg-turquoise-dark" style="width: 0%;"></div>
+                <div id="stepper-bar" class="absolute left-[10%] top-[47px] sm:top-[51px]" style="width: 0%;"></div>
 
-                <div class="relative grid grid-cols-5 gap-2 text-center">
+                <div class="relative grid grid-cols-5 gap-1 text-center">
                     <!-- Paso 1: Recibido -->
                     <div class="flex flex-col items-center">
                         <div id="dot-0"
-                             class="stepper-dot h-10 w-10 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600">
+                             class="stepper-dot h-11 w-11 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600 shadow-sm sm:h-12 sm:w-12">
                             <i class="bi bi-inbox text-sm" aria-hidden="true"></i>
                         </div>
-                        <p id="label-0" class="stepper-label mt-2.5 text-[11px] font-medium text-slate-400">Recibido</p>
+                        <p id="label-0" class="stepper-label mt-3 text-[10px] font-medium leading-tight text-slate-400 sm:text-xs">Recibido</p>
                     </div>
                     <!-- Paso 2: Diagnóstico -->
                     <div class="flex flex-col items-center">
                         <div id="dot-1"
-                             class="stepper-dot h-10 w-10 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600">
+                             class="stepper-dot h-11 w-11 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600 shadow-sm sm:h-12 sm:w-12">
                             <i class="bi bi-search text-sm" aria-hidden="true"></i>
                         </div>
-                        <p id="label-1" class="stepper-label mt-2.5 text-[11px] font-medium text-slate-400">Diagnóstico</p>
+                        <p id="label-1" class="stepper-label mt-3 text-[10px] font-medium leading-tight text-slate-400 sm:text-xs">Diagnóstico</p>
                     </div>
                     <!-- Paso 3: En reparación -->
                     <div class="flex flex-col items-center">
                         <div id="dot-2"
-                             class="stepper-dot h-10 w-10 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600">
+                             class="stepper-dot h-11 w-11 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600 shadow-sm sm:h-12 sm:w-12">
                             <i class="bi bi-tools text-sm" aria-hidden="true"></i>
                         </div>
-                        <p id="label-2" class="stepper-label mt-2.5 text-[11px] font-medium text-slate-400">En reparación</p>
+                        <p id="label-2" class="stepper-label mt-3 text-[10px] font-medium leading-tight text-slate-400 sm:text-xs">En reparación</p>
                     </div>
                     <!-- Paso 4: Listo para entrega -->
                     <div class="flex flex-col items-center">
                         <div id="dot-3"
-                             class="stepper-dot h-10 w-10 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600">
+                             class="stepper-dot h-11 w-11 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600 shadow-sm sm:h-12 sm:w-12">
                             <i class="bi bi-flag text-sm" aria-hidden="true"></i>
                         </div>
-                        <p id="label-3" class="stepper-label mt-2.5 text-[11px] font-medium text-slate-400">Listo para entrega</p>
+                        <p id="label-3" class="stepper-label mt-3 text-[10px] font-medium leading-tight text-slate-400 sm:text-xs">Listo para entrega</p>
                     </div>
                     <!-- Paso 5: Entregado -->
                     <div class="flex flex-col items-center">
                         <div id="dot-4"
-                             class="stepper-dot h-10 w-10 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600">
+                             class="stepper-dot h-11 w-11 rounded-full border-2 border-slate-200 dark:border-white/15 bg-white dark:bg-graphite flex items-center justify-center text-slate-300 dark:text-slate-600 shadow-sm sm:h-12 sm:w-12">
                             <i class="bi bi-check-lg text-sm" aria-hidden="true"></i>
                         </div>
-                        <p id="label-4" class="stepper-label mt-2.5 text-[11px] font-medium text-slate-400">Entregado</p>
+                        <p id="label-4" class="stepper-label mt-3 text-[10px] font-medium leading-tight text-slate-400 sm:text-xs">Entregado</p>
                     </div>
                 </div>
             </div>
 
             <!-- La ficha del vehículo tal como la vería el taller -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-graphite p-5">
+                <div class="rounded-2xl border border-slate-200/80 dark:border-white/[0.06] bg-[#F8FAFA] dark:bg-graphite p-5 sm:p-6">
                     <div class="flex items-start justify-between">
                         <div>
                             <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Placa</p>
@@ -205,7 +227,7 @@
                     </div>
                 </div>
 
-                <div class="rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-graphite p-5 flex flex-col justify-center gap-4">
+                <div class="rounded-2xl border border-slate-200/80 dark:border-white/[0.06] bg-[#F8FAFA] dark:bg-graphite p-5 sm:p-6 flex flex-col justify-center gap-4">
                     <div class="flex items-center gap-3">
                         <div class="h-9 w-9 rounded-lg bg-turquoise/10 dark:bg-turquoise-dark/10 flex items-center justify-center text-turquoise dark:text-turquoise-dark shrink-0">
                             <i class="bi bi-box-seam" aria-hidden="true"></i>
@@ -230,30 +252,32 @@
     </section>
 
     <!-- ============ SECCIÓN 3: BENEFICIOS ============ -->
-    <section class="bg-slate-50 dark:bg-navy-surface border-y border-slate-100 dark:border-white/5 py-24">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="font-display font-extrabold text-3xl text-navy dark:text-white">Diseñado para el caos del taller moderno</h2>
-                <p class="mt-4 text-slate-500 dark:text-slate-400">Automatiza lo aburrido para que puedas enfocarte en sacar los vehículos a tiempo.</p>
+    <section class="relative overflow-hidden border-y border-slate-200/70 bg-[#EFF4F3] py-20 dark:border-white/[0.06] dark:bg-navy-surface sm:py-24">
+        <div class="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full border border-turquoise/10 dark:border-turquoise-dark/10"></div>
+        <div class="pointer-events-none absolute -right-5 -top-9 h-44 w-44 rounded-full border border-turquoise/10 dark:border-turquoise-dark/10"></div>
+        <div class="relative max-w-7xl mx-auto px-5 sm:px-6">
+            <div class="max-w-2xl mb-12 sm:mb-14">
+                <h2 class="font-display font-extrabold text-3xl leading-tight tracking-tight text-navy dark:text-white sm:text-4xl">Diseñado para el caos del taller moderno</h2>
+                <p class="mt-4 max-w-xl text-base leading-7 text-slate-500 dark:text-slate-400">Automatiza lo aburrido para que puedas enfocarte en sacar los vehículos a tiempo.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white dark:bg-graphite p-8 rounded-2xl border border-slate-100 dark:border-white/5 shadow-sm">
-                    <div class="h-12 w-12 rounded-lg bg-turquoise/10 dark:bg-turquoise-dark/10 flex items-center justify-center mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5">
+                <div class="group bg-white dark:bg-graphite p-7 sm:p-8 rounded-[24px] border border-white dark:border-white/[0.06] shadow-[0_16px_45px_-32px_rgba(11,37,69,.35)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_-30px_rgba(11,37,69,.32)]">
+                    <div class="h-12 w-12 rounded-2xl bg-turquoise/10 dark:bg-turquoise-dark/10 flex items-center justify-center mb-6 text-turquoise-hover dark:text-turquoise-dark transition group-hover:scale-105">
                         <svg class="h-6 w-6 text-turquoise dark:text-turquoise-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                     </div>
                     <h3 class="font-display font-bold text-xl text-navy dark:text-white mb-3">Control de Inventario</h3>
                     <p class="text-sm text-slate-500 dark:text-slate-400">Se acabaron las piezas perdidas. Gestiona repuestos, controla existencias mínimas y genera pedidos a proveedores automáticamente.</p>
                 </div>
-                <div class="bg-white dark:bg-graphite p-8 rounded-2xl border border-slate-100 dark:border-white/5 shadow-sm">
-                    <div class="h-12 w-12 rounded-lg bg-turquoise/10 dark:bg-turquoise-dark/10 flex items-center justify-center mb-6">
+                <div class="group bg-white dark:bg-graphite p-7 sm:p-8 rounded-[24px] border border-white dark:border-white/[0.06] shadow-[0_16px_45px_-32px_rgba(11,37,69,.35)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_-30px_rgba(11,37,69,.32)]">
+                    <div class="h-12 w-12 rounded-2xl bg-turquoise/10 dark:bg-turquoise-dark/10 flex items-center justify-center mb-6 text-turquoise-hover dark:text-turquoise-dark transition group-hover:scale-105">
                         <svg class="h-6 w-6 text-turquoise dark:text-turquoise-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
                     <h3 class="font-display font-bold text-xl text-navy dark:text-white mb-3">Flujo de Reparación</h3>
                     <p class="text-sm text-slate-500 dark:text-slate-400">Visualiza en tiempo real el estado de cada vehículo. Desde el diagnóstico inicial hasta la entrega y facturación final.</p>
                 </div>
-                <div class="bg-white dark:bg-graphite p-8 rounded-2xl border border-slate-100 dark:border-white/5 shadow-sm">
-                    <div class="h-12 w-12 rounded-lg bg-turquoise/10 dark:bg-turquoise-dark/10 flex items-center justify-center mb-6">
+                <div class="group bg-white dark:bg-graphite p-7 sm:p-8 rounded-[24px] border border-white dark:border-white/[0.06] shadow-[0_16px_45px_-32px_rgba(11,37,69,.35)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_-30px_rgba(11,37,69,.32)]">
+                    <div class="h-12 w-12 rounded-2xl bg-turquoise/10 dark:bg-turquoise-dark/10 flex items-center justify-center mb-6 text-turquoise-hover dark:text-turquoise-dark transition group-hover:scale-105">
                         <svg class="h-6 w-6 text-turquoise dark:text-turquoise-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                     </div>
                     <h3 class="font-display font-bold text-xl text-navy dark:text-white mb-3">Historial de Clientes</h3>
@@ -264,45 +288,45 @@
     </section>
 
     <!-- ============ SECCIÓN 4: FAQ ============ -->
-    <section class="max-w-3xl mx-auto px-6 py-24">
-        <h2 class="font-display font-extrabold text-3xl text-navy dark:text-white text-center mb-10">Preguntas Frecuentes</h2>
+    <section class="relative max-w-4xl mx-auto px-5 py-20 sm:px-6 sm:py-24">
+        <h2 class="font-display font-extrabold text-3xl tracking-tight text-navy dark:text-white text-center mb-10 sm:text-4xl">Preguntas Frecuentes</h2>
 
-        <div class="space-y-4">
-            <details class="group rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-graphite [&_summary::-webkit-details-marker]:hidden">
-                <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-navy dark:text-white font-semibold">
+        <div class="space-y-3">
+            <details class="faq-item group rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-navy-surface shadow-sm shadow-navy/[0.02] [&_summary::-webkit-details-marker]:hidden">
+                <summary class="flex cursor-pointer items-center justify-between gap-4 p-5 text-navy dark:text-white font-semibold leading-6 sm:p-6">
                     Si un cliente regresa meses después, ¿puedo ver qué se le hizo a su vehículo anteriormente?
-                    <span class="relative h-5 w-5 shrink-0">
+                    <span class="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-turquoise-hover dark:bg-white/[0.06] dark:text-turquoise-dark">
                     <svg class="absolute inset-0 h-5 w-5 opacity-100 group-open:opacity-0 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     <svg class="absolute inset-0 h-5 w-5 opacity-0 group-open:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
                 </span>
                 </summary>
-                <div class="px-6 pb-6 text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                <div class="px-5 pb-6 pr-14 text-slate-500 dark:text-slate-400 text-sm leading-7 sm:px-6 sm:pr-16">
                     Así es. El directorio de clientes guarda un historial completo vinculado tanto al propietario como a las placas del vehículo, permitiéndote consultar reparaciones pasadas y repuestos utilizados en segundos.
                 </div>
             </details>
 
-            <details class="group rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-graphite [&_summary::-webkit-details-marker]:hidden">
-                <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-navy dark:text-white font-semibold">
+            <details class="faq-item group rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-navy-surface shadow-sm shadow-navy/[0.02] [&_summary::-webkit-details-marker]:hidden">
+                <summary class="flex cursor-pointer items-center justify-between gap-4 p-5 text-navy dark:text-white font-semibold leading-6 sm:p-6">
                     ¿Cómo funciona el control de estado de avance en las reparaciones?
-                    <span class="relative h-5 w-5 shrink-0">
+                    <span class="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-turquoise-hover dark:bg-white/[0.06] dark:text-turquoise-dark">
                     <svg class="absolute inset-0 h-5 w-5 opacity-100 group-open:opacity-0 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     <svg class="absolute inset-0 h-5 w-5 opacity-0 group-open:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
                 </span>
                 </summary>
-                <div class="px-6 pb-6 text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                <div class="px-5 pb-6 pr-14 text-slate-500 dark:text-slate-400 text-sm leading-7 sm:px-6 sm:pr-16">
                     Cada vehículo en taller cuenta con un estatus actualizado (diagnóstico, en espera de repuestos, en proceso o finalizado). Esto te permite saber exactamente en qué etapa se encuentra cada trabajo sin tener que ir a preguntar al área de mecánicos.
                 </div>
             </details>
 
-            <details class="group rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-graphite [&_summary::-webkit-details-marker]:hidden">
-                <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-navy dark:text-white font-semibold">
+            <details class="faq-item group rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-navy-surface shadow-sm shadow-navy/[0.02] [&_summary::-webkit-details-marker]:hidden">
+                <summary class="flex cursor-pointer items-center justify-between gap-4 p-5 text-navy dark:text-white font-semibold leading-6 sm:p-6">
                     ¿Qué pasa si me quedo sin stock de un repuesto?
-                    <span class="relative h-5 w-5 shrink-0">
+                    <span class="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-turquoise-hover dark:bg-white/[0.06] dark:text-turquoise-dark">
                     <svg class="absolute inset-0 h-5 w-5 opacity-100 group-open:opacity-0 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     <svg class="absolute inset-0 h-5 w-5 opacity-0 group-open:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
                 </span>
                 </summary>
-                <div class="px-6 pb-6 text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                <div class="px-5 pb-6 pr-14 text-slate-500 dark:text-slate-400 text-sm leading-7 sm:px-6 sm:pr-16">
                     El sistema descuenta automáticamente las piezas del inventario al asociarlas a una reparación y te facilita la gestión de pedidos a proveedores para que nunca pierdas el hilo de lo que necesitas reponer.
                 </div>
             </details>
@@ -310,7 +334,7 @@
     </section>
 
     <!-- ============ FOOTER ============ -->
-    <footer class="bg-slate-50 dark:bg-navy-surface border-t border-slate-200 dark:border-white/5 py-12">
+    <footer class="bg-[#EFF4F3] dark:bg-navy-surface border-t border-slate-200/70 dark:border-white/5 py-12">
         <div class="max-w-6xl mx-auto px-6 flex justify-center">
             <div class="flex items-center gap-2.5">
                 <img th:src="@{/img/logo-icon_1.png}" src="/img/logo-icon.png" alt="AutoGest" class="h-7 w-7 filter grayscale opacity-70">
@@ -416,7 +440,7 @@
 
             // Anima la barra
             bar.style.transition = 'width 0.9s cubic-bezier(0.4, 0, 0.2, 1)';
-            bar.style.width      = step.barPct + '%';
+            bar.style.width      = (step.barPct * 0.8) + '%';
 
             // Actualiza el badge
             badge.textContent = step.name;
