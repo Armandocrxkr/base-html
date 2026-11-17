@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Persona;
-use Illuminate\Http\Request; // <-- Agrega esta línea
+use Illuminate\Http\Request;
 
 class PersonaController extends Controller
 {
     public function index()
     {
-        // Aquí mantienes el código de tu guía anterior (ej. $personas = Persona::all(); return view(...);)
+        $personas = Persona::orderBy('id')->get();
+        return view('personas.index', compact('personas'));
     }
 
-    // <-- Agrega estos dos métodos debajo de index() -->
     public function create()
     {
         return view('personas.create');
