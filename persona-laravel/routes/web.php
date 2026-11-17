@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -29,6 +28,14 @@ Route::middleware('auth')->group(function () {
     // Listado de personas
     Route::get('/personas', [PersonaController::class, 'index'])
         ->name('personas.index');
+
+    // Mostrar formulario para crear persona
+    Route::get('/personas/crear', [PersonaController::class, 'create'])
+        ->name('personas.create');
+
+    // Guardar nueva persona
+    Route::post('/personas', [PersonaController::class, 'store'])
+        ->name('personas.store');
 
     // Cerrar sesión
     Route::post('/logout', [LoginController::class, 'destroy'])
