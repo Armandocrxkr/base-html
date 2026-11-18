@@ -1,44 +1,31 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PersonaController;
 
-// Página principal
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Mostrar formulario de login
 Route::get('/login', [LoginController::class, 'create'])
     ->name('login');
-
-// Procesar login
 Route::post('/login', [LoginController::class, 'store'])
-    ->middleware('throttle:6,1')
-    ->name('login.store');
+    ->middleware('throttle:6,1')->name('login.store');
 
-// Rutas protegidas
 Route::middleware('auth')->group(function () {
-
     Route::get('/inicio', function () {
         return redirect()->route('personas.index');
     })->name('inicio');
-
-    // Listado de personas
     Route::get('/personas', [PersonaController::class, 'index'])
         ->name('personas.index');
-
-    // Mostrar formulario para crear persona
     Route::get('/personas/crear', [PersonaController::class, 'create'])
         ->name('personas.create');
-
-    // Guardar nueva persona
     Route::post('/personas', [PersonaController::class, 'store'])
         ->name('personas.store');
-
-    // Cerrar sesión
+    Route::get('/personas/{id}/editar', [PersonaController::class, 'edit'])
+        ->whereNumber('id')->name('personas.edit');
+    Route::put('/personas/{id}', [PersonaController::class, 'update'])
+        ->whereNumber('id')->name('personas.update');
     Route::post('/logout', [LoginController::class, 'destroy'])
         ->name('logout');
-
 });
