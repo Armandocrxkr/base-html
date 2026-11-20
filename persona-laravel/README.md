@@ -1,58 +1,51 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Proyecto `personas-laravel` — CRUD con Autenticación en Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicación web desarrollada en **Laravel** con persistencia en **MySQL** para la carrera de Ingeniería en Sistemas Computacionales (UNAH). Implementa autenticación de usuarios y el ciclo completo **CRUD** (Crear, Leer, Actualizar y Eliminar) sobre la entidad `Persona`.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 1. Conceptos Fundamentales de Laravel
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Migración
+Archivo de control de versiones para el esquema de la base de datos que permite crear o modificar tablas desde código PHP sin escribir SQL manual.
+* **Ejemplo en el proyecto:** Las migraciones en `database/migrations/` definen las tablas `users` (credenciales de acceso) y `personas` (con los campos `id`, `dni`, `nombre`, `fecha_nacimiento`, `created_at` y `updated_at`), ejecutadas mediante `php artisan migrate`.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Seeder
+Clase encargada de poblar la base de datos con registros iniciales o de prueba de forma automatizada.
+* **Ejemplo en el proyecto:** `DatabaseSeeder.php` (y `PersonaSeeder.php`) inserta el usuario inicial en `users` y registros ficticios iniciales en `personas` verificando primero que la tabla esté vacía (`Persona::count() === 0`), evitando duplicados si se vuelve a ejecutar `php artisan db:seed`.
 
-## Learning Laravel
+### Factory
+Plantilla que define reglas con la librería **Faker** para generar instancias y datos ficticios de prueba sin comprometer información real.
+* **Ejemplo en el proyecto:** `UserFactory.php` y `PersonaFactory.php` en `database/factories/` generan datos ficticios (`fake()->name()`, fechas e identificadores) para pruebas de desarrollo.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Modelo
+Clase de **Eloquent ORM** que representa una tabla de MySQL y permite consultar, insertar, actualizar y eliminar registros usando métodos orientados a objetos.
+* **Ejemplo en el proyecto:** `app/Models/Persona.php` y `app/Models/User.php`. En `PersonaController.php` se utiliza `Persona::all()` para listar, `Persona::create(...)` para guardar, `Persona::findOrFail($id)` para localizar un registro (o devolver `404` si no existe) y `$persona->delete()` para eliminarlo definitivamente de MySQL.  ### Blade Motor de plantillas nativo de Laravel que combina HTML con directivas (`@extends`, `@section`, `@forelse`, `@if`, `{{ }}`) y escapa automáticamente los datos impresos para evitar ataques XSS. * **Ejemplo en el proyecto:** `resources/views/personas/index.blade.php` recorre la colección `$personas` con `@forelse ($personas as$persona)` para renderizar las filas de la tabla e imprime los valores de forma segura con `{{ $persona->dni }}` y `{{ $persona->nombre }}`.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Sesión
+Mecanismo que conserva estado entre peticiones HTTP sin estado, utilizado tanto para mantener autenticado al usuario como para mostrar mensajes temporales (*flash data*).
+* **Ejemplo en el proyecto:** Al iniciar sesión en `LoginController`, el middleware `auth` en `routes/web.php` protege todas las rutas `/personas`. Asimismo, en `PersonaController::destroy()`, `->with('exito', 'Persona eliminada correctamente.')` guarda un mensaje temporal en sesión que se muestra una sola vez en `index.blade.php` mediante `session('exito')`.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### CSRF (Cross-Site Request Forgery)
+Mecanismo de seguridad que protege los formularios contra peticiones maliciosas enviadas desde sitios externos aprovechando una sesión activa, mediante un token único validado por el servidor.
+* **Ejemplo en el proyecto:** En `resources/views/personas/index.blade.php`, cada formulario de eliminación incluye la directiva `@csrf`, que genera un `<input type="hidden" name="_token">` verificado por Laravel antes de ejecutar `destroy()`.
 
-## Agentic Development
+### Métodos HTTP (`GET`, `POST`, `PUT`, `DELETE`)
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+| Método | Función | Ejemplo en el proyecto |
+| :--- | :--- | :--- |
+| **`GET`** | Consultar datos y renderizar vistas sin modificar registros. | `Route::get('/personas', [PersonaController::class, 'index'])` muestra el listado; `Route::get('/personas/{id}/editar', ...)` carga el formulario de edición. |
+| **`POST`** | Enviar datos nuevos al servidor o gestionar la sesión. | `Route::post('/personas', [PersonaController::class, 'store'])` guarda una nueva persona; `Route::post('/logout', ...)` cierra la sesión. |
+| **`PUT`** | Actualizar un registro existente en el servidor. | `Route::put('/personas/{id}', [PersonaController::class, 'update'])`, enviado desde un formulario HTML con `method="POST"` y `@method('PUT')`. |
+| **`DELETE`** | Eliminar un registro específico identificado por su ID. | `Route::delete('/personas/{id}', [PersonaController::class, 'destroy'])`, enviado desde `index.blade.php` con `method="POST"`, `@method('DELETE')` y confirmación previa en JavaScript. |
 
-```bash
-composer require laravel/boost --dev
+---
 
-php artisan boost:install
-```
+## 2. Flujo de una Petición en el Proyecto (Práctica en casa)
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. **Archivo que recibe la petición:**
+   * Todas las solicitudes HTTP entran por `public/index.php` y son dirigidas por **`routes/web.php`**, pasando primero por los middlewares `auth` (sesión activa) y verificación CSRF, hasta llegar al método correspondiente en **`app/Http/Controllers/PersonaController.php`** (o `LoginController.php`).
+2. **Archivo que consulta o modifica los datos:**
+   * Los modelos Eloquent **`app/Models/Persona.php`** y **`app/Models/User.php`**, invocados desde el controlador, ejecutan las operaciones `SELECT`, `INSERT`, `UPDATE` y `DELETE` sobre la base de datos **MySQL**.
+3. **Archivo que genera el HTML:**
+   * Las plantillas Blade ubicadas en **`resources/views/personas/`** (`index.blade.php`, `create.blade.php`, `edit.blade.php`) y **`resources/views/auth/login.blade.php`** procesan los datos enviados por el controlador y devuelven el documento HTML final al navegador.
