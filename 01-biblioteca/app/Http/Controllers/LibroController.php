@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Libro;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class LibroController extends Controller
 {
@@ -51,15 +52,21 @@ class LibroController extends Controller
      */
     public function edit(Libro $libro)
     {
-        //
+        return view('libros.edit', compact('libro'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Libro $libro)
     {
-        //
+        $datos = $request->validate([
+            'codigo' => ['required', 'string', Rule::unique('libros', 'codigo')->ignore($libro->id)],
+            'titulo' => ['required', 'string', 'max:150'],
+            'autor' => ['required', 'string', 'max:100'],
+            'anio_publicacion' => ['required', 'integer', 'min:1450', 'max:' . date('Y')],
+        ]);
+
+        $libro->update($datos);
+
+        return redirect()->route('libros.index')->with('success', 'Libro actualizado correctamente.');
     }
 
     /**
