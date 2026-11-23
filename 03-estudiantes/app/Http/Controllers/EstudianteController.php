@@ -28,4 +28,21 @@ class EstudianteController extends Controller
         Estudiante::create($datos);
         return redirect()->route('estudiantes.index')->with('success', 'Registro creado correctamente.');
     }
+
+    public function edit(Estudiante $estudiante)
+    {
+        return view('estudiantes.edit', compact('estudiante'));
+    }
+
+    public function update(Request $request, Estudiante $estudiante)
+    {
+        $datos = $request->validate([
+            'numero_cuenta' => ['required', 'string', Rule::unique('estudiantes', 'numero_cuenta')->ignore($estudiante->id)],
+            'nombre' => ['required', 'string', 'max:100'],
+            'correo' => ['required', 'email', Rule::unique('estudiantes', 'correo')->ignore($estudiante->id)],
+            'fecha_nacimiento' => ['required', 'date', 'before_or_equal:today'],
+        ]);
+        $estudiante->update($datos);
+        return redirect()->route('estudiantes.index')->with('success', 'Registro actualizado correctamente.');
+    }
 }
