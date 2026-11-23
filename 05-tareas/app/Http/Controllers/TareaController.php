@@ -29,4 +29,22 @@ class TareaController extends Controller
         Tarea::create($datos);
         return redirect()->route('tareas.index')->with('success', 'Registro creado correctamente.');
     }
+
+    public function edit(Tarea $tarea)
+    {
+        return view('tareas.edit', compact('tarea'));
+    }
+
+    public function update(Request $request, Tarea $tarea)
+    {
+        $datos = $request->validate([
+            'titulo' => ['required', 'string', 'max:150'],
+            'descripcion' => ['required', 'string', 'max:500'],
+            'responsable' => ['required', 'string', 'max:100'],
+            'fecha_limite' => ['required', 'date'],
+            'estado' => ['required', 'in:pendiente,en proceso,completada'],
+        ]);
+        $tarea->update($datos);
+        return redirect()->route('tareas.index')->with('success', 'Registro actualizado correctamente.');
+    }
 }
