@@ -21,15 +21,21 @@ class LibroController extends Controller
      */
     public function create()
     {
-        //
+        return view('libros.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $datos = $request->validate([
+            'codigo' => ['required', 'string', 'unique:libros,codigo'],
+            'titulo' => ['required', 'string', 'max:150'],
+            'autor' => ['required', 'string', 'max:100'],
+            'anio_publicacion' => ['required', 'integer', 'min:1450', 'max:' . date('Y')],
+        ]);
+
+        Libro::create($datos);
+
+        return redirect()->route('libros.index')->with('success', 'Libro registrado correctamente.');
     }
 
     /**
