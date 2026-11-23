@@ -47,4 +47,10 @@ class TareaController extends Controller
         $tarea->update($datos);
         return redirect()->route('tareas.index')->with('success', 'Registro actualizado correctamente.');
     }
+
+    public function destroy(Tarea $tarea)
+    {
+        $tarea->delete();
+        return redirect()->route('tareas.index')->with('success', 'Registro eliminado correctamente.');
+    }
 }
