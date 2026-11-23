@@ -28,4 +28,21 @@ class ProductoController extends Controller
         Producto::create($datos);
         return redirect()->route('productos.index')->with('success', 'Registro creado correctamente.');
     }
+
+    public function edit(Producto $producto)
+    {
+        return view('productos.edit', compact('producto'));
+    }
+
+    public function update(Request $request, Producto $producto)
+    {
+        $datos = $request->validate([
+            'codigo' => ['required', 'string', Rule::unique('productos', 'codigo')->ignore($producto->id)],
+            'nombre' => ['required', 'string', 'max:100'],
+            'precio' => ['required', 'numeric', 'gt:0'],
+            'existencias' => ['required', 'integer', 'min:0'],
+        ]);
+        $producto->update($datos);
+        return redirect()->route('productos.index')->with('success', 'Registro actualizado correctamente.');
+    }
 }
