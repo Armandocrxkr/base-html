@@ -45,4 +45,10 @@ class ProductoController extends Controller
         $producto->update($datos);
         return redirect()->route('productos.index')->with('success', 'Registro actualizado correctamente.');
     }
+
+    public function destroy(Producto $producto)
+    {
+        $producto->delete();
+        return redirect()->route('productos.index')->with('success', 'Registro eliminado correctamente.');
+    }
 }
